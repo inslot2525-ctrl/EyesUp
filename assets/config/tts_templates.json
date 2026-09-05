@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "_comment": "Spoken verdict templates. Placeholders: {app} {payout} {km} {pickupKm} {rate} {rival} {pct} {remaining}. Numbers are formatted before substitution - no decimals for rupees, one decimal for km. VerdictPhraserTest must assert that no rendered string still contains a '{'. A literal '{payout}' spoken on stage is unrecoverable.",
+
+  "_nativeSpeakerCheck": "PENDING - the Hindi and Marathi lines below are written to be natural and short, but MUST be read aloud to a native speaker at the venue before the demo. Marathi especially: a Pune jury will hear an unnatural phrasing instantly. Fix them here on the device; no rebuild needed.",
+
+  "numberFormat": {
+    "rupees": "%.0f",
+    "km": "%.1f",
+    "rate": "%.0f",
+    "percent": "%.0f"
+  },
+
+  "EN": {
+    "TAKE":         "Take the {app} one. {payout} rupees for {km} kilometres.",
+    "SKIP":         "Skip it. Low rate for the distance.",
+    "BEST_OF_N":    "Take the {app} one. {payout} rupees for {km} kilometres. That's {pct} percent better than the {rival} order.",
+    "BEATEN_BY":    "Skip this one. The {rival} order still open is better.",
+    "UNCLEAR":      "Order from {app}. Details unclear.",
+
+    "reason.GOOD_RATE":            "Good rate.",
+    "reason.POOR_RATE":            "Rate is below what you usually take.",
+    "reason.LONG_DEADHEAD":        "Pickup is {pickupKm} kilometres away, and that's unpaid.",
+    "reason.BEATS_OTHER_OFFER":    "It's the best of what's open right now.",
+    "reason.BEATEN_BY_OTHER_OFFER":"The {rival} order pays better.",
+    "reason.SURGE_ACTIVE":         "Surge is on.",
+    "reason.GOAL_URGENT":          "You're {remaining} rupees from your target and the day's nearly over.",
+    "reason.GOAL_MET":             "You've already hit today's target, so you can be picky.",
+    "reason.DEAD_DROP_ZONE":       "It drops you somewhere quiet. You'll come back empty.",
+    "reason.HOT_DROP_ZONE":        "It drops you where there's plenty of work.",
+    "reason.ABOVE_YOUR_THRESHOLD": "It's above your usual bar.",
+    "reason.BELOW_YOUR_THRESHOLD": "It's below your usual bar.",
+    "reason.LOW_CONFIDENCE":       "I couldn't read all the details.",
+
+    "why.prefix":   "Here's why.",
+    "repeat.none":  "Nothing to repeat.",
+    "status":       "You've earned {payout} rupees today. {remaining} to go.",
+    "listener.down":"I've lost notification access. Check the settings."
+  },
+
+  "HI": {
+    "TAKE":         "{app} वाला ले लो. {km} किलोमीटर के {payout} रुपये.",
+    "SKIP":         "छोड़ दो. दूरी के हिसाब से रेट कम है.",
+    "BEST_OF_N":    "{app} वाला ले लो. {km} किलोमीटर के {payout} रुपये. {rival} से {pct} प्रतिशत बेहतर है.",
+    "BEATEN_BY":    "इसे छोड़ो. {rival} का ऑर्डर बेहतर है.",
+    "UNCLEAR":      "{app} से ऑर्डर आया है, पर जानकारी साफ़ नहीं है.",
+
+    "reason.GOOD_RATE":            "रेट अच्छा है.",
+    "reason.POOR_RATE":            "रेट आपके हिसाब से कम है.",
+    "reason.LONG_DEADHEAD":        "पिकअप {pickupKm} किलोमीटर दूर है, और उसके पैसे नहीं मिलते.",
+    "reason.BEATS_OTHER_OFFER":    "अभी जितने ऑर्डर खुले हैं, उनमें यही सबसे अच्छा है.",
+    "reason.BEATEN_BY_OTHER_OFFER":"{rival} वाला ज़्यादा देता है.",
+    "reason.SURGE_ACTIVE":         "सर्ज चल रहा है.",
+    "reason.GOAL_URGENT":          "आपके लक्ष्य से {remaining} रुपये बाकी हैं और दिन ख़त्म होने वाला है.",
+    "reason.GOAL_MET":             "आज का लक्ष्य पूरा हो गया है.",
+    "reason.DEAD_DROP_ZONE":       "यह आपको सुनसान इलाक़े में छोड़ेगा. वापसी खाली जाएगी.",
+    "reason.HOT_DROP_ZONE":        "यह आपको ऐसी जगह छोड़ेगा जहाँ काम मिलता रहेगा.",
+    "reason.ABOVE_YOUR_THRESHOLD": "आपकी आम सीमा से ऊपर है.",
+    "reason.BELOW_YOUR_THRESHOLD": "आपकी आम सीमा से नीचे है.",
+    "reason.LOW_CONFIDENCE":       "पूरी जानकारी नहीं पढ़ पाया.",
+
+    "why.prefix":   "वजह यह है.",
+    "repeat.none":  "दोहराने के लिए कुछ नहीं है.",
+    "status":       "आज आपने {payout} रुपये कमाए हैं. {remaining} बाकी हैं.",
+    "listener.down":"नोटिफ़िकेशन एक्सेस बंद हो गया है. सेटिंग्स देखिए."
+  },
+
+  "MR": {
+    "TAKE":         "{app} चं घ्या. {km} किलोमीटरला {payout} रुपये.",
+    "SKIP":         "नको. अंतराच्या मानाने दर कमी आहे.",
+    "BEST_OF_N":    "{app} चं घ्या. {km} किलोमीटरला {payout} रुपये. {rival} पेक्षा {pct} टक्के चांगलं आहे.",
+    "BEATEN_BY":    "हे सोडा. {rival} चं ऑर्डर जास्त चांगलं आहे.",
+    "UNCLEAR":      "{app} कडून ऑर्डर आलंय, पण माहिती स्पष्ट नाही.",
+
+    "reason.GOOD_RATE":            "दर चांगला आहे.",
+    "reason.POOR_RATE":            "तुमच्या मानाने दर कमी आहे.",
+    "reason.LONG_DEADHEAD":        "पिकअप {pickupKm} किलोमीटर लांब आहे, आणि त्याचे पैसे मिळत नाहीत.",
+    "reason.BEATS_OTHER_OFFER":    "आत्ता जे ऑर्डर सुरू आहेत, त्यात हेच सर्वात चांगलं.",
+    "reason.BEATEN_BY_OTHER_OFFER":"{rival} चं जास्त देतंय.",
+    "reason.SURGE_ACTIVE":         "सर्ज सुरू आहे.",
+    "reason.GOAL_URGENT":          "तुमच्या लक्ष्यापासून {remaining} रुपये बाकी आहेत आणि दिवस संपत आलाय.",
+    "reason.GOAL_MET":             "आजचं लक्ष्य पूर्ण झालंय.",
+    "reason.DEAD_DROP_ZONE":       "हे तुम्हाला शांत भागात सोडेल. परत रिकामं यावं लागेल.",
+    "reason.HOT_DROP_ZONE":        "हे तुम्हाला अशा भागात सोडेल जिथे काम मिळत राहील.",
+    "reason.ABOVE_YOUR_THRESHOLD": "तुमच्या नेहमीच्या मर्यादेपेक्षा वर आहे.",
+    "reason.BELOW_YOUR_THRESHOLD": "तुमच्या नेहमीच्या मर्यादेपेक्षा खाली आहे.",
+    "reason.LOW_CONFIDENCE":       "पूर्ण माहिती वाचता आली नाही.",
+
+    "why.prefix":   "कारण असं आहे.",
+    "repeat.none":  "पुन्हा सांगण्यासारखं काही नाही.",
+    "status":       "आज तुम्ही {payout} रुपये कमावले आहेत. {remaining} बाकी.",
+    "listener.down":"नोटिफिकेशन ॲक्सेस बंद झालाय. सेटिंग्ज बघा."
+  },
+
+  "voiceCommands": {
+    "_comment": "Phrases the on-device SpeechRecognizer maps to intents. Match case-insensitively on a contains() basis - ASR transcripts are noisy, so keep the keys short and distinctive.",
+    "WHY":    ["why", "kyun", "क्यों", "का", "reason", "batao"],
+    "REPEAT": ["repeat", "again", "phir se", "पुन्हा", "फिर से"],
+    "ACCEPT": ["take it", "accept", "le lo", "घ्या", "haan", "yes"],
+    "SKIP":   ["skip", "reject", "chhod", "नको", "no", "next"],
+    "STATUS": ["status", "how much", "kitna", "किती", "earnings"]
+  }
+}

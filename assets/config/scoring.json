@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "_comment": "Seed scoring config. Tune on the device at /sdcard/Sarthi/config/scoring.json and press Reload config. Formula is specified in docs/BUILD_SPEC.md section 5 - implement it exactly, then tune here. Tuning knobs for common symptoms are in docs/RISKS_AND_FALLBACKS.md section 4.",
+
+  "hourBuckets": {
+    "EARLY":     [5, 8],
+    "MORNING":   [8, 12],
+    "AFTERNOON": [12, 17],
+    "EVENING":   [17, 21],
+    "NIGHT":     [21, 5]
+  },
+
+  "benchmarkRupeesPerKm": {
+    "_comment": "Market rate per EFFECTIVE km (trip + pickup) that a score of ~1.0 on the rate term represents. Seeded from rough Pune two-wheeler/auto economics - treat as a starting point and tune against how the demo feels, not as ground truth.",
+    "RIDE":   { "EARLY": 11.0, "MORNING": 12.0, "AFTERNOON": 10.5, "EVENING": 13.0, "NIGHT": 12.5 },
+    "FOOD":   { "EARLY": 9.0,  "MORNING": 9.5,  "AFTERNOON": 9.0,  "EVENING": 11.0, "NIGHT": 10.5 },
+    "PARCEL": { "EARLY": 12.0, "MORNING": 13.0, "AFTERNOON": 12.0, "EVENING": 13.5, "NIGHT": 13.0 },
+    "UNKNOWN":{ "EARLY": 11.0, "MORNING": 11.5, "AFTERNOON": 10.5, "EVENING": 12.5, "NIGHT": 12.0 }
+  },
+
+  "targetHourlyRupees": 180.0,
+  "avgSpeedKmph": 22.0,
+  "_speedComment": "Pune city average including traffic. Used only when the notification carries no ETA.",
+
+  "deadheadWarnShare": 0.35,
+  "deadheadPenalty": 0.30,
+  "_deadheadComment": "If pickupKm / effectiveKm exceeds deadheadWarnShare, subtract deadheadPenalty from the raw score and add ReasonCode.LONG_DEADHEAD. Corpus payload U3 (6.5 km pickup for a 4.0 km trip, share 0.62) must trigger this.",
+
+  "arbitrationMargin": 1.10,
+  "_arbitrationComment": "A live rival offer must beat this offer's score by this factor before we say BEATEN_BY_OTHER_OFFER. Lower it if arbitration never fires; raise it if it fires on near-ties and looks arbitrary on stage.",
+
+  "weights": {
+    "wRate":  1.00,
+    "wTime":  0.45,
+    "wGoal":  0.30,
+    "wZone":  0.20,
+    "wSurge": 0.25
+  },
+  "_weightsComment": "Weights sum to ~2.2, and score = clamp(raw * 50, 0, 100), so a market-rate offer in a neutral zone with the driver on-target lands around 55-65. Change wRate last - it is the load-bearing term.",
+
+  "ewmaAlpha": 0.25,
+  "thresholdClamp": [20.0, 85.0],
+  "initialAcceptedEwma": 60.0,
+  "initialRejectedEwma": 40.0,
+  "_ewmaComment": "threshold = clamp(midpoint(acceptedEwma, rejectedEwma)). Raise ewmaAlpha to 0.4 if the threshold bar does not visibly move during the stage demo - the demo moment matters more than statistical elegance.",
+
+  "defaultTtlSeconds": 30,
+  "sweepIntervalMs": 1000,
+
+  "zones": {
+    "_comment": "Static Pune zone demand, 0.0 (dead - you will deadhead back) to 1.0 (hot). Matched case-insensitively as a substring of the drop text. An unmatched zone scores neutralZoneDemand. This is domain judgement, not measured data - say so if a judge asks, and say that the next version learns it from the driver's own history.",
+    "neutralZoneDemand": 0.5,
+    "table": {
+      "Hinjewadi":        { "EARLY": 0.75, "MORNING": 0.85, "AFTERNOON": 0.55, "EVENING": 0.80, "NIGHT": 0.20 },
+      "Kharadi":          { "EARLY": 0.65, "MORNING": 0.80, "AFTERNOON": 0.55, "EVENING": 0.75, "NIGHT": 0.30 },
+      "Magarpatta":       { "EARLY": 0.60, "MORNING": 0.75, "AFTERNOON": 0.55, "EVENING": 0.70, "NIGHT": 0.30 },
+      "Viman Nagar":      { "EARLY": 0.60, "MORNING": 0.70, "AFTERNOON": 0.60, "EVENING": 0.80, "NIGHT": 0.45 },
+      "Koregaon Park":    { "EARLY": 0.40, "MORNING": 0.55, "AFTERNOON": 0.60, "EVENING": 0.90, "NIGHT": 0.75 },
+      "Kalyani Nagar":    { "EARLY": 0.45, "MORNING": 0.60, "AFTERNOON": 0.60, "EVENING": 0.80, "NIGHT": 0.60 },
+      "Baner":            { "EARLY": 0.60, "MORNING": 0.75, "AFTERNOON": 0.60, "EVENING": 0.80, "NIGHT": 0.40 },
+      "Aundh":            { "EARLY": 0.55, "MORNING": 0.70, "AFTERNOON": 0.60, "EVENING": 0.75, "NIGHT": 0.40 },
+      "Wakad":            { "EARLY": 0.60, "MORNING": 0.75, "AFTERNOON": 0.55, "EVENING": 0.75, "NIGHT": 0.30 },
+      "Pimple Saudagar":  { "EARLY": 0.55, "MORNING": 0.65, "AFTERNOON": 0.50, "EVENING": 0.70, "NIGHT": 0.30 },
+      "Kothrud":          { "EARLY": 0.60, "MORNING": 0.75, "AFTERNOON": 0.65, "EVENING": 0.80, "NIGHT": 0.45 },
+      "Shivajinagar":     { "EARLY": 0.70, "MORNING": 0.85, "AFTERNOON": 0.75, "EVENING": 0.85, "NIGHT": 0.55 },
+      "Deccan":           { "EARLY": 0.65, "MORNING": 0.80, "AFTERNOON": 0.70, "EVENING": 0.80, "NIGHT": 0.50 },
+      "Hadapsar":         { "EARLY": 0.55, "MORNING": 0.70, "AFTERNOON": 0.55, "EVENING": 0.70, "NIGHT": 0.35 },
+      "Yerwada":          { "EARLY": 0.50, "MORNING": 0.65, "AFTERNOON": 0.55, "EVENING": 0.65, "NIGHT": 0.35 },
+      "Vishrantwadi":     { "EARLY": 0.45, "MORNING": 0.55, "AFTERNOON": 0.45, "EVENING": 0.60, "NIGHT": 0.25 },
+      "Pune Station":     { "EARLY": 0.85, "MORNING": 0.85, "AFTERNOON": 0.75, "EVENING": 0.85, "NIGHT": 0.70 },
+      "Airport":          { "EARLY": 0.80, "MORNING": 0.75, "AFTERNOON": 0.65, "EVENING": 0.80, "NIGHT": 0.70 }
+    }
+  },
+
+  "defaults": {
+    "dailyGoalRupees": 1200.0,
+    "shiftEndHour": 23
+  }
+}

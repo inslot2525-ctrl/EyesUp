@@ -1,0 +1,168 @@
+# Sarthi (Driver Copilot) — Feature List, Winning Plan & Build Order
+
+**iQOO City Battles, Pune · Sat 5 – Sun 6 September 2026**
+Companion to `driver-copilot-iqoo-pune-gameplan.md`. That file is *strategy and schedule*; this file
+is *what we build and in exactly what order*. When the two disagree, this file wins on build order.
+
+---
+
+## 1. The winning plan in one paragraph
+
+Every feature below traces to a rubric line. **25% of the score (Creative Phone Use 15% + Office Kit
+10%) is raw device telemetry** — unrecoverable by pitching, unlosable by forgetting to mention it. So
+every module is chosen partly because it genuinely exercises a different capability of the phone, not
+because it sounds good on a slide.
+
+**The winning angle in one sentence:** Sarthi is not a notification reader — it is a hands-free
+arbitrator that compares every live gig offer across every app the driver runs, normalised for the
+unpaid distance platforms hide, and speaks one answer in the driver's own language, entirely
+on-device.
+
+---
+
+## 2. Feature list, tiered
+
+### Tier 0 — must ship. The demo does not exist without these.
+
+| # | Feature | Why it's Tier 0 | Acceptance criterion |
+|---|---|---|---|
+| T0.1 | **`:gigsim` companion app** posting real OS notifications for 5 gig apps | We have no driver accounts. This is the only input source, and it makes the demo repeatable | Pressing a button in `:gigsim` produces a system notification with the correct title/text/bigText |
+| T0.2 | **Notification capture** via `NotificationListenerService`, allow-listed by package | The foundation everything sits on | Every `:gigsim` post appears in Sarthi's raw-event list within 500 ms |
+| T0.3 | **Tier A regex extraction**, driven by `assets/config/parsers.json` | Fast, deterministic, safe on stage; config-driven so it is tunable from the phone | ≥ 90% field extraction on the corpus in `docs/NOTIFICATION_CORPUS.md` |
+| T0.4 | **Deadhead-aware scoring v1** — `payout / (tripKm + pickupKm)` vs. a benchmark | The domain insight. Also the thing platforms hide from drivers | A `Verdict` with a score and at least one reason code for every parsed offer |
+| T0.5 | **Templated TTS verdict**, English first, then Hindi + Marathi | The whole product is "it talks so you don't look" | Verdict is spoken within 1.5 s of the notification landing |
+| T0.6 | **Offer list UI** with confidence badges and accept/reject buttons | Judges need to see what the phone heard | Cards render, tapping accept/reject persists the decision |
+
+### Tier 1 — the differentiators. Build once Tier 0 is solid.
+
+| # | Feature | Why | Acceptance criterion |
+|---|---|---|---|
+| T1.1 | **Cross-app arbitration + `OfferQueue` with TTLs** — **the headline feature** | No human can compare three live offers from three apps while driving. This is the novelty claim and the demo moment | 3 offers within 6 s produce exactly one spoken winner naming the runner-up |
+| T1.2 | **Verdict explainability** — reason codes surfaced in UI and speech | "Take it" is a black box; "take it, 40% better than the Swiggy one" is a product | Every verdict carries ≥ 1 human-readable reason |
+| T1.3 | **Adaptive threshold (EWMA)** that visibly moves on accept/reject | The live "it learns me" stage moment | Rejecting two good offers visibly raises the threshold bar on screen |
+| T1.4 | **Tier B on-device NLU — ML Kit Entity Extraction** | A genuine offline on-device model, tiny, near-zero risk. Our on-device AI claim survives even if Gemma never loads | A payload regex cannot parse still yields payout and/or time |
+| T1.5 | **Earnings-goal urgency** — "you're ₹340 from your ₹1,200 target and it's 8pm" | Cheap, emotional, and makes the scoring sound like it understands the job | Goal progress bar + urgency term visibly affects the verdict |
+| T1.6 | **Drop-zone return prospects** from a static Pune zone × hour table | "This drops you in Hinjewadi at 22:00 — you will deadhead back." Locally specific, judges from Pune will feel it | A low-demand drop zone measurably lowers the score |
+
+### Tier 2 — process and demo points. Not code, but real score, easy to lose by accident.
+
+| # | Item |
+|---|---|
+| T2.1 | **Scheduled Office Kit bridging** — mirror, remote control, clipboard, file transfer — repeated through the whole event and logged in PROGRESS with timestamps |
+| T2.2 | **Grant the notification permission live on stage.** Turn the scariest part of the product into the privacy story before anyone asks |
+| T2.3 | **Say the "this is not a camera app / not a voice-note app" beat out loud** in the pitch |
+| T2.4 | **A recorded backup video** of a perfect demo run, on the phone, ready to play if hardware betrays you |
+| T2.5 | **Rehearse the 90-second pitch three times** with the real device and real speaker at stage distance |
+
+### Tier 3 — flagship stretch. Only after Eval 2 is clean.
+
+| # | Feature | Risk | Buildable version |
+|---|---|---|---|
+| T3.1 | **Tier C on-device LLM** — MediaPipe `LlmInference` with Gemma3-1B-IT int4 | Medium-high: load time, memory, backend support | JSON-only extraction prompt, temp 0, 3 s timeout, falls back to Tier B. **Hard cutoff Sun 00:00** |
+| T3.2 | **Voice command loop** — on-device `SpeechRecognizer` for "why" / "repeat" / "skip anyway" | Medium | Push-to-talk with a large target, not always-listening. Honest framing: mounted phone, thumb on a big button |
+| T3.3 | **Camera fatigue check** — single shot between orders, MediaPipe Face Landmarker, spoken result | Medium | Only makes sense with a driver-facing mount — **say that in the pitch before a judge says it**. Landmarks transient, on-device, never stored |
+| T3.4 | **GPS consistency check** | High | Not true ground-truth distance. Instead: cross-check whether two apps' claimed distances for the same pickup point agree, and flag the lowballer. Same story, far less engineering |
+
+### Explicitly out of scope — do not build these
+
+- Photographing the phone screen for OCR fallback parsing. Touches the camera, but solves a problem a
+  screenshot plus on-device OCR already solves better. Camera use for its own sake reads as padding.
+- Any account, login, or sync flow.
+- A trained ML model for scoring. The EWMA heuristic tells the same story on stage and is explainable
+  under questioning, which a half-trained model is not.
+- Support for more than the 5 seeded apps.
+- A settings screen beyond: language picker, daily earnings goal, reload-config button.
+- Automating the accept tap in the gig app itself. It would break platform terms and it is the one
+  thing that turns a defensible assistant into an indefensible bot. **Sarthi advises; the driver acts.**
+
+---
+
+## 3. Strict build order — this is law (see `CLAUDE.md` R4)
+
+Follow this even under time pressure. Do not start step N+1 while step N is broken.
+
+```
+ 1.  :gigsim app posting real notifications                  [T0.1]  Red Light
+ 2.  NotificationListenerService capture + raw event list    [T0.2]  Red Light
+ 3.  Tier A regex parser from parsers.json → OrderOffer      [T0.3]  Red Light
+ 4.  Offer card UI + confidence badge                        [T0.6]  Red Light
+ 5.  ScoringEngine v1 (deadhead-aware) → Verdict             [T0.4]  Red/Green
+ 6.  TtsSpeaker, English                                     [T0.5]  Red/Green
+ 7.  Hindi + Marathi templates                               [T0.5]  → EVAL 1
+─────────────────────────────────────────────────────────── EVAL 1 · Sat 19:00
+ 8.  OfferQueue + cross-app arbitration + storm demo         [T1.1]  Green
+ 9.  Reason codes + explainability in UI and speech          [T1.2]  Green
+10.  Tier B ML Kit Entity Extraction                         [T1.4]  Green
+11.  Tier C Gemma via MediaPipe  — HARD CUTOFF Sun 00:00     [T3.1]  Green
+12.  Adaptive EWMA threshold + accept/reject learning        [T1.3]  Green
+13.  Earnings goal + urgency term                            [T1.5]  Green
+14.  Pune zone × hour table + return-leg penalty             [T1.6]  Green
+15.  Voice command loop (on-device ASR)                      [T3.2]  Green
+─────────────────────────────────────────────────────────── FREEZE · Sun 06:30
+16.  Demo hardening, dry runs ×3, backup video               [T2.4/5]
+─────────────────────────────────────────────────────────── EVAL 2 · Sun 09:00
+17.  Camera fatigue check (single shot)                      [T3.3]  only if clean
+18.  GPS consistency check                                   [T3.4]  only if clean
+```
+
+**A flawless five-feature demo beats a nine-feature demo where half visibly breaks on stage.** If you
+are behind at Sun 04:00, cut from the bottom of the list, never from the middle.
+
+---
+
+## 4. What to do during Red Light, concretely
+
+The format's biggest avoidable loss is idling during the phone-only stretch. These are all
+genuinely phone-first tasks — nobody should ever be waiting for Green Light.
+
+1. **Tune `parsers.json` on the phone.** Open `/sdcard/Sarthi/config/parsers.json` in a text editor,
+   change a regex, hit *Reload config* in the app, fire the matching `:gigsim` payload, see whether
+   it parses. Full iteration loop, no laptop, no rebuild. This is the highest-value Red Light work
+   in the whole plan.
+2. **Tune `scoring.json`** the same way — benchmarks, weights, zone table, TTL values.
+3. **Tune `tts_templates.json`** the same way and listen to each phrase through the actual speaker.
+   Get a Marathi speaker at the venue to check the phrasing.
+4. **Capture payloads.** If any teammate has a real gig app installed as a *customer*, capture those
+   notification formats too — they are free corpus.
+5. **Device qualification:** the 10-minute idle test for R2, the TTS voice-pack audit, GPS fix time,
+   camera framing on a mount, ASR accuracy in a noisy hall.
+6. **Drive Android Studio through Office Kit remote control** for anything that does need a build.
+   Real work *and* Office Kit telemetry at the same time.
+7. **Pitch rehearsal.** Costs nothing, needs no device, worth 10% of the score.
+
+---
+
+## 5. Feature-to-rubric traceability
+
+| Feature | End product 30% | Novelty 20% | Phone use 15% | Tech depth 15% | Office Kit 10% | Demo 10% |
+|---|---|---|---|---|---|---|
+| Notification capture (T0.2) | ●●● | ●● | ●●● | ●● | | ● |
+| Tier A regex (T0.3) | ●●● | | | ● | | |
+| Tier B ML Kit (T1.4) | ●● | ● | ●●● | ●●● | | |
+| Tier C Gemma (T3.1) | ● | ●● | ●●● | ●●● | | ● |
+| Deadhead scoring (T0.4) | ●●● | ●●● | | ●●● | | ●● |
+| Cross-app arbitration (T1.1) | ●●● | ●●● | | ●●● | | ●●● |
+| TTS verdict (T0.5) | ●●● | ● | ●●● | | | ●●● |
+| Voice commands (T3.2) | ●● | ●● | ●●● | ●● | | ●● |
+| Adaptive threshold (T1.3) | ●● | ●● | | ●●● | | ●●● |
+| Earnings goal (T1.5) | ●● | ●● | | ● | | ●● |
+| Zone return-leg (T1.6) | ●● | ●●● | ● (GPS) | ●● | | ●● |
+| Camera fatigue (T3.3) | ● | ●● | ●●● | ●● | | ●● |
+| Office Kit bridging (T2.1) | | | | | ●●● | |
+| Live permission grant (T2.2) | | ●● | | | | ●●● |
+
+Read the columns, not the rows: the two thin columns are Office Kit and Demo, and both are earned by
+*process*, not code. Do not let a coding sprint eat them.
+
+---
+
+## 6. Definition of done, per tier
+
+- **Tier 0 done** = a judge can hold the phone, someone presses a `:gigsim` button, and the phone
+  speaks a correct verdict in a language the judge chose. No laptop in the loop.
+- **Tier 1 done** = the same, but with three offers at once and a spoken comparison, plus a
+  threshold that visibly moves when you reject.
+- **Tier 3 done** = the same, plus the phone says "you have been driving four hours, your blink rate
+  is up, take a break" when asked.
+
+If Tier 0 is not done by Sat 19:00, stop building and make Tier 0 flawless. That is the whole game.
