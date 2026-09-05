@@ -1,6 +1,6 @@
 # CLAUDE.md — Read this first, every session
 
-You are working on **Sarthi** (product name; internal/legacy name "Driver Copilot"), an Android app
+You are working on **Pillion** (product name; internal/legacy name "Driver Copilot"), an Android app
 built during the **iQOO City Battles Pune hackathon, Sat 5 – Sun 6 Sept 2026**, a 30-hour
 phone-first build.
 
@@ -26,6 +26,19 @@ Then, and only then, start work.
 
 ## 1. Non-negotiable working rules
 
+**R0 — Hand off exactly the way you were handed to.** The relay is symmetric and self-perpetuating.
+You were able to start cold because the previous session left a perfect log; the next session gets the
+same, from you, without being asked. Concretely, **you own the handoff from the moment you start**:
+- Assume every message could be your last — usage limits do not warn you. Keep `PROGRESS.md` current
+  as you go, never "at the end".
+- The moment you notice you are running long, **stop building and hand off.** A clean handoff with a
+  half-finished feature beats a finished feature nobody can find.
+- Run the *Ending a session* checklist in `HANDOFF.md` §2 in full. Not most of it.
+- **Tell the next agent to do the same.** Your `➡️ NEXT INSTRUCTION` must end with the handoff
+  reminder, so the protocol reproduces itself down the chain and never decays.
+- Never assume the next agent is the same model, has your context, or will read anything you did not
+  write down. Write for a stranger.
+
 **R1 — Log everything.** After *every* meaningful unit of work (a feature lands, a build breaks, a
 decision is made, a device quirk is found, a demo is rehearsed), append an entry to `PROGRESS.md`
 using the template at the top of that file. Never batch a session's work into one entry at the end —
@@ -34,7 +47,7 @@ if you hit your limit mid-task, the log must already be current. **The log is th
 **R2 — Every entry ends with an instruction.** The `➡️ NEXT INSTRUCTION` block is written *for a
 different agent with zero context*. It must name exact files, exact commands, and an acceptance
 criterion. "Continue the parser" is a failed instruction. "Add a `RapidoParser` to
-`app/src/main/java/com/sarthi/copilot/parse/regex/` matching the 3 payloads in
+`app/src/main/java/com/pillion/copilot/parse/regex/` matching the 3 payloads in
 `docs/NOTIFICATION_CORPUS.md` §2.3; done when `RegexParserTest` passes 3/3" is a good one.
 
 **R3 — Commit constantly.** Small commits, present-tense messages, push after every entry.
@@ -63,7 +76,7 @@ every Office Kit session in PROGRESS.md.
 ## 2. What we are building, in one paragraph
 
 Gig drivers run 2–3 apps at once (Uber, Rapido, Swiggy, Zomato, Porter) and glance at the phone
-mid-ride to judge whether an incoming order is worth taking. Sarthi is an on-device Android copilot
+mid-ride to judge whether an incoming order is worth taking. Pillion is an on-device Android copilot
 that reads incoming order notifications at the OS level, extracts payout/distance/pickup-time with a
 three-tier on-device NLU stack, scores each offer against the driver's own history, their earnings
 goal, the time of day and the drop zone's return prospects — **and compares it against every other
@@ -71,7 +84,7 @@ offer currently open across all their apps** — then speaks a one-line verdict 
 English. Nothing leaves the device.
 
 **The headline feature is cross-app arbitration.** A human cannot compare a Swiggy order against a
-Rapido offer that arrived 40 seconds ago while driving. Sarthi can. Lead with that.
+Rapido offer that arrived 40 seconds ago while driving. Pillion can. Lead with that.
 
 ---
 

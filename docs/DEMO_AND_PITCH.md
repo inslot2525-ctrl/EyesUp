@@ -11,23 +11,28 @@ runbook. Rehearse from it, do not improvise.
 Timings are strict. Practise with a stopwatch. **Whoever is not speaking is holding the phone and
 driving the demo** — never one person doing both.
 
-### 0:00–0:15 · The hazard
-> "A gig driver in Pune runs three apps at once. Uber, Rapido, Swiggy. Offers land seconds apart and
-> each one expires in about thirty seconds. So to decide, they look at the phone. Often while moving.
-> That is the problem — not that the decision is hard, but that making it requires looking down."
+### 0:00–0:15 · The problem
+> "A delivery worker in Pune runs three platforms at once. Each one only ever shows you its own
+> orders. So every few minutes they're making an economic decision — with incomplete information,
+> on a thirty-second timer, while moving."
 
-Say it in a flat, concrete voice. No adjectives. Do not say "revolutionary".
+Flat, concrete, no adjectives. Do not say "revolutionary".
+
+> **Framing rule — this matters.** Do **not** open with "drivers look at their phone while driving."
+> It implies we are enabling phone use in traffic, and a sharp judge will turn it against us. The
+> correct framing is: **"we move the decision from the screen to the voice layer."** The phone becomes
+> a sensor and a copilot, not something the rider stares at.
 
 ### 0:15–0:40 · The insight and the mechanism
-> "But the real problem isn't reading one offer. It's comparing three. A driver can eyeball one order
-> at a red light. Nobody can hold three live offers from three different apps in their head, work out
-> what each actually pays once you subtract the unpaid distance to the pickup, and decide before the
-> timers run out.
+> "And the real problem isn't reading one offer — it's comparing three. A worker can eyeball one order
+> at a red light. Nobody can hold three live offers from three platforms in their head, work out what
+> each actually *nets* after the unpaid ride to the pickup and the fuel, and decide before the timers
+> run out.
 >
-> Sarthi does that. It reads the notifications at the OS level, pulls out the numbers with three
-> tiers of on-device AI, scores every live offer against the driver's own history and their earnings
-> target, compares them against each other, and says one sentence out loud. All on the phone.
-> No cloud, no account, nothing leaves the device."
+> Pillion does that. It reads the notifications at the OS level, pulls the numbers out with three
+> tiers of on-device AI, works out what each order really pays per hour after costs, ranks them
+> against each other, and says one sentence out loud. No cloud, no account, no backend. Nothing
+> leaves the device."
 
 ### 0:40–1:15 · Live demo
 Hand the phone to a judge. Run the STORM sequence (§2).
@@ -47,7 +52,7 @@ Hand the phone to a judge. Run the STORM sequence (§2).
 - [ ] Phone at >60% battery, brightness at max, Do Not Disturb **off**, volume at max
 - [ ] Bluetooth speaker paired and tested, or rely on the phone's speaker if the room is quiet
 - [ ] `:gigsim` open on the *second* phone, STORM button visible
-- [ ] Sarthi open on the demo phone, listener status banner **green**
+- [ ] Pillion open on the demo phone, listener status banner **green**
 - [ ] `CLEAR ALL` pressed in `:gigsim` so the shade is empty
 - [ ] Language set to whatever you will demo first
 - [ ] Backup video ready in the gallery, one tap away
@@ -58,7 +63,7 @@ Hand the phone to a judge. Run the STORM sequence (§2).
 |---|---|---|---|
 | 1 | Hand the phone to a judge | They are holding it. This matters — it is *their* experience, not a slide | — |
 | 2 | Say: "This is off the internet. Airplane mode, if you like." Let them toggle it | Establishes the on-device claim before you make it | Nothing to fail |
-| 3 | Press **STORM** on the second phone | 3 notifications land in 6 s; Sarthi speaks the arbitration verdict naming the winner and the runner-up | Fall to §4 |
+| 3 | Press **STORM** on the second phone | 3 notifications land in 6 s; Pillion speaks the arbitration verdict naming the winner and the runner-up | Fall to §4 |
 | 4 | Ask them to say **"why"** to the phone | It explains its reasoning aloud | Tap the "Why" button instead — same output, no excuse needed |
 | 5 | Tap **Reject** on the offer it recommended | The threshold bar visibly moves | Skip; do not draw attention |
 | 6 | Switch language to Marathi, press STORM again | Same verdict, in Marathi | Switch to Hindi |
@@ -73,12 +78,13 @@ Hand the phone to a judge. Run the STORM sequence (§2).
 These are worth score and none of them is obvious from watching:
 
 1. **"On-device, no cloud, no account."** Privacy story and novelty story in one sentence.
-2. **"We count the distance to the pickup. The platforms don't show you that."** This is the domain
-   insight and it is what makes a judge who knows the space lean forward.
+2. **"This pays ₹100. You net ₹64 after fuel and the unpaid ride to the pickup — and that's ₹236 an
+   hour, not ₹393."** The domain insight, and the line that makes a judge who knows the space lean
+   forward. Lead with ₹/hour; per-km is the folk metric, per-hour is the correct one.
 3. **"These are simulated notifications, because we can't get driver accounts — but they go through
    the real Android notification pipeline, exactly like the real apps would."** Say it *before*
    anyone asks. Disclosed is credible; discovered is fatal.
-4. **"Sarthi advises. It never taps accept for you."** Pre-empts the "isn't this a bot" objection.
+4. **"Pillion advises. It never taps accept for you."** Pre-empts the "isn't this a bot" objection.
 
 ---
 
@@ -120,7 +126,7 @@ question, in front of the same jury, and takes your technical-depth score with i
 > The driver grants Android's notification-access permission explicitly, in system settings, for
 > their own device and their own notifications. It is the same OS API smartwatches and car
 > head-units use. Nothing is transmitted, nothing is stored off-device, and we never automate an
-> action inside another app — Sarthi advises, the driver taps. It is an accessibility-assistant
+> action inside another app — Pillion advises, the driver taps. It is an accessibility-assistant
 > pattern, not scraping.
 
 **"Why wouldn't Uber just build this?"**

@@ -51,21 +51,21 @@ jury, which is worse than not having it.
 A vivo/iQOO ROM will kill a notification listener within minutes unless you do all of this. Menu
 names vary by version; hunt for the equivalent.
 
-- [ ] Settings → Battery → **High background power consumption** → allow Sarthi
-- [ ] Settings → Battery → Background power consumption management → Sarthi → **Allow high background
+- [ ] Settings → Battery → **High background power consumption** → allow Pillion
+- [ ] Settings → Battery → Background power consumption management → Pillion → **Allow high background
       power consumption** / **Don't optimise**
-- [ ] Settings → Apps → Special app access → **Autostart** → enable Sarthi
-- [ ] Settings → Apps → Sarthi → Battery → **Unrestricted**
-- [ ] Recent apps → swipe up to reveal the card menu → **Lock** the Sarthi card
-- [ ] Settings → Apps → Special app access → **Notification access** → enable Sarthi
+- [ ] Settings → Apps → Special app access → **Autostart** → enable Pillion
+- [ ] Settings → Apps → Pillion → Battery → **Unrestricted**
+- [ ] Recent apps → swipe up to reveal the card menu → **Lock** the Pillion card
+- [ ] Settings → Apps → Special app access → **Notification access** → enable Pillion
 - [ ] Settings → Apps → Special app access → **Display over other apps** → enable (needed if you add
       an overlay later; harmless now)
 
 **Then run the verification test and log the result:**
-1. Post a `:gigsim` notification. Confirm Sarthi captures it.
+1. Post a `:gigsim` notification. Confirm Pillion captures it.
 2. Lock the screen. Wait **10 minutes**, untouched.
 3. Post another `:gigsim` notification without unlocking.
-4. Unlock. Did Sarthi capture the second one?
+4. Unlock. Did Pillion capture the second one?
 
 **If the answer is no, the demo is not safe and this is your top priority.** Re-check the list,
 reboot, and add the foreground service. Record the result in `PROGRESS.md` either way.
@@ -104,7 +104,7 @@ over USB takes about a minute; downloading it on venue Wi-Fi may take an hour or
 ./gradlew :app:testDebugUnitTest
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb install -r gigsim/build/outputs/apk/debug/gigsim-debug.apk
-adb shell am start -n com.sarthi.copilot/.ui.MainActivity
+adb shell am start -n com.pillion.app/.ui.MainActivity
 ```
 
 Paste the result — pass or the actual error — into your `PROGRESS.md` entry. "It built fine" without
@@ -112,8 +112,8 @@ the command output is not a verification.
 
 Useful during development:
 ```bash
-adb logcat -c && adb logcat | grep -E "Sarthi|AndroidRuntime"
-adb shell dumpsys notification | grep -i sarthi        # is the listener bound?
+adb logcat -c && adb logcat | grep -E "Pillion|AndroidRuntime"
+adb shell dumpsys notification | grep -i pillion        # is the listener bound?
 adb shell am start -a android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 ```
 
@@ -168,7 +168,7 @@ recovered by mentioning it in the pitch.**
 
 | Sensor | Test | Passes when |
 |---|---|---|
-| Notification listener | Post from `:gigsim` | Event appears in Sarthi within 500 ms |
+| Notification listener | Post from `:gigsim` | Event appears in Pillion within 500 ms |
 | Speaker / TTS | Speak one phrase per locale | Audible and correctly pronounced |
 | Microphone / ASR | On-device `SpeechRecognizer`, say "why" | Transcript returns offline (airplane mode on) |
 | GPS | Request one fix outdoors or by a window | Fix in under 30 s |

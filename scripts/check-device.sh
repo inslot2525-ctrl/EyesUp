@@ -13,7 +13,7 @@ adb $DEVICE_ARG shell getprop ro.build.version.sdk
 adb $DEVICE_ARG shell getprop ro.product.cpu.abi
 
 echo
-echo "=== NOTIFICATION LISTENER (is Sarthi enabled?) ==="
+echo "=== NOTIFICATION LISTENER (is Pillion enabled?) ==="
 adb $DEVICE_ARG shell settings get secure enabled_notification_listeners
 
 echo
@@ -22,12 +22,12 @@ adb $DEVICE_ARG shell "pm list packages | grep -i -E 'tts|speech'"
 
 echo
 echo "=== BATTERY OPTIMISATION (should say the app is exempt) ==="
-adb $DEVICE_ARG shell "dumpsys deviceidle whitelist | grep -i sarthi" || echo "  not whitelisted - fix this, see DEVICE_AND_TOOLING_SETUP.md section 4"
+adb $DEVICE_ARG shell "dumpsys deviceidle whitelist | grep -i pillion" || echo "  not whitelisted - fix this, see DEVICE_AND_TOOLING_SETUP.md section 4"
 
 echo
 echo "=== STORAGE WRITE TEST ==="
-adb $DEVICE_ARG shell "mkdir -p /sdcard/Sarthi/config && echo ok > /sdcard/Sarthi/config/.probe && cat /sdcard/Sarthi/config/.probe" \
-  || echo "  /sdcard/Sarthi not writable - use the app-private external dir instead"
+adb $DEVICE_ARG shell "mkdir -p /sdcard/Pillion/config && echo ok > /sdcard/Pillion/config/.probe && cat /sdcard/Pillion/config/.probe" \
+  || echo "  /sdcard/Pillion not writable - use the app-private external dir instead"
 
 echo
 echo "Paste this output into your PROGRESS.md entry and fill in HANDOFF.md section 5."

@@ -1,4 +1,4 @@
-# Sarthi (Driver Copilot) — Feature List, Winning Plan & Build Order
+# Pillion (Driver Copilot) — Feature List, Winning Plan & Build Order
 
 **iQOO City Battles, Pune · Sat 5 – Sun 6 September 2026**
 Companion to `driver-copilot-iqoo-pune-gameplan.md`. That file is *strategy and schedule*; this file
@@ -13,7 +13,7 @@ Every feature below traces to a rubric line. **25% of the score (Creative Phone 
 every module is chosen partly because it genuinely exercises a different capability of the phone, not
 because it sounds good on a slide.
 
-**The winning angle in one sentence:** Sarthi is not a notification reader — it is a hands-free
+**The winning angle in one sentence:** Pillion is not a notification reader — it is a hands-free
 arbitrator that compares every live gig offer across every app the driver runs, normalised for the
 unpaid distance platforms hide, and speaks one answer in the driver's own language, entirely
 on-device.
@@ -27,10 +27,10 @@ on-device.
 | # | Feature | Why it's Tier 0 | Acceptance criterion |
 |---|---|---|---|
 | T0.1 | **`:gigsim` companion app** posting real OS notifications for 5 gig apps | We have no driver accounts. This is the only input source, and it makes the demo repeatable | Pressing a button in `:gigsim` produces a system notification with the correct title/text/bigText |
-| T0.2 | **Notification capture** via `NotificationListenerService`, allow-listed by package | The foundation everything sits on | Every `:gigsim` post appears in Sarthi's raw-event list within 500 ms |
+| T0.2 | **Notification capture** via `NotificationListenerService`, allow-listed by package | The foundation everything sits on | Every `:gigsim` post appears in Pillion's raw-event list within 500 ms |
 | T0.3 | **Tier A regex extraction**, driven by `assets/config/parsers.json` | Fast, deterministic, safe on stage; config-driven so it is tunable from the phone | ≥ 90% field extraction on the corpus in `docs/NOTIFICATION_CORPUS.md` |
-| T0.4 | **Deadhead-aware scoring v1** — `payout / (tripKm + pickupKm)` vs. a benchmark | The domain insight. Also the thing platforms hide from drivers | A `Verdict` with a score and at least one reason code for every parsed offer |
-| T0.5 | **Templated TTS verdict**, English first, then Hindi + Marathi | The whole product is "it talks so you don't look" | Verdict is spoken within 1.5 s of the notification landing |
+| T0.4 | **Net-earnings scoring v1** — effective distance `tripKm + pickupKm`, minus personalised fuel cost, expressed as **₹/hour** and a 0-100 Smart Score | The domain insight, upgraded: drivers care about what they *keep*, not the headline payout. ₹/hour is the correct comparator because time is the scarce resource | A `Verdict` with a Smart Score, a net-₹ figure, a ₹/hour figure and at least one reason code, for every parsed offer |
+| T0.5 | **Templated TTS verdict**, English first, then Hindi + Marathi. **Lead the spoken line with ₹/hour**, not ₹/km | The whole product is "it talks so you don't look". "₹393 an hour versus ₹236" lands harder than any per-km figure | Verdict is spoken within 1.5 s of the notification landing |
 | T0.6 | **Offer list UI** with confidence badges and accept/reject buttons | Judges need to see what the phone heard | Cards render, tapping accept/reject persists the decision |
 
 ### Tier 1 — the differentiators. Build once Tier 0 is solid.
@@ -42,7 +42,10 @@ on-device.
 | T1.3 | **Adaptive threshold (EWMA)** that visibly moves on accept/reject | The live "it learns me" stage moment | Rejecting two good offers visibly raises the threshold bar on screen |
 | T1.4 | **Tier B on-device NLU — ML Kit Entity Extraction** | A genuine offline on-device model, tiny, near-zero risk. Our on-device AI claim survives even if Gemma never loads | A payload regex cannot parse still yields payout and/or time |
 | T1.5 | **Earnings-goal urgency** — "you're ₹340 from your ₹1,200 target and it's 8pm" | Cheap, emotional, and makes the scoring sound like it understands the job | Goal progress bar + urgency term visibly affects the verdict |
+| T1.5 | **AI Shift Strategist** — target, earned, time left, required rate vs current rate, spoken coaching | Upgrades the goal-urgency term into a demoable feature. The arithmetic already exists; this is presentation | "You're ₹320 behind target — prioritise jobs above ₹250/hour" is spoken and the panel updates live |
 | T1.6 | **Drop-zone return prospects** from a static Pune zone × hour table | "This drops you in Hinjewadi at 22:00 — you will deadhead back." Locally specific, judges from Pune will feel it | A low-demand drop zone measurably lowers the score |
+| T1.7 | **Zero-Look Mode** — motion detected → one huge card, touch disabled, voice only | The hero feature *name*. Mechanically close to what the app already does; the naming and the motion trigger are the upgrade, and the accelerometer banks another sensor | Above the motion threshold the UI collapses and interaction is refused, with a spoken explanation |
+| T1.8 | **Conversational voice loop** — "what have I got", "why", "compare", "accept", "how much have I earned" | Promoted from Tier 3: the rubric rewards voice and the product is voice-first, so it was mis-tiered. Intent parsing runs on the **local LLM** — a genuine LLM job that also banks the inference calls HackTracker counts | Five intents recognised offline; the "Why" **button** remains as the demo-safe fallback |
 
 ### Tier 2 — process and demo points. Not code, but real score, easy to lose by accident.
 
@@ -53,6 +56,8 @@ on-device.
 | T2.3 | **Say the "this is not a camera app / not a voice-note app" beat out loud** in the pitch |
 | T2.4 | **A recorded backup video** of a perfect demo run, on the phone, ready to play if hardware betrays you |
 | T2.5 | **Rehearse the 90-second pitch three times** with the real device and real speaker at stage distance |
+| T2.6 | **Priority preference** — one onboarding question (maximise earnings / minimise fuel / finish early / heading home) reweights the score |
+| T2.7 | **Home Direction mode** — a bearing comparison; orders heading home get a bonus. "Pays ₹18 less but takes you 4 km toward home" |
 
 ### Tier 3 — flagship stretch. Only after Eval 2 is clean.
 
@@ -60,20 +65,32 @@ on-device.
 |---|---|---|---|
 | T3.1 | **Tier C on-device LLM** — MediaPipe `LlmInference` with Gemma3-1B-IT int4 | Medium-high: load time, memory, backend support | JSON-only extraction prompt, temp 0, 3 s timeout, falls back to Tier B. **Hard cutoff Sun 00:00** |
 | T3.2 | **Voice command loop** — on-device `SpeechRecognizer` for "why" / "repeat" / "skip anyway" | Medium | Push-to-talk with a large target, not always-listening. Honest framing: mounted phone, thumb on a big button |
-| T3.3 | **Camera fatigue check** — single shot between orders, MediaPipe Face Landmarker, spoken result | Medium | Only makes sense with a driver-facing mount — **say that in the pitch before a judge says it**. Landmarks transient, on-device, never stored |
+| T3.3 | **Camera OCR ingestion** — stationary worker points the camera at an order screen; ML Kit Text Recognition (offline) → the same normaliser → the same decision engine | Low-medium | **Replaces the camera fatigue check** (ADR-018). This is a coherent *second ingestion path* for platforms whose notifications are too sparse to parse, so the camera is used for something the product actually needs. ML Kit OCR is on-device and offline |
 | T3.4 | **GPS consistency check** | High | Not true ground-truth distance. Instead: cross-check whether two apps' claimed distances for the same pickup point agree, and flag the lowballer. Same story, far less engineering |
 
 ### Explicitly out of scope — do not build these
 
-- Photographing the phone screen for OCR fallback parsing. Touches the camera, but solves a problem a
-  screenshot plus on-device OCR already solves better. Camera use for its own sake reads as padding.
+- **An accessibility service that reads other apps' UI.** This is a positioning call, not a time call —
+  we would reject it with unlimited time. It contradicts ADR-009, Play policy restricts accessibility
+  services to accessibility purposes, and it turns a defensible driver-side assistant into something a
+  judge can reasonably call scraping. The notification listener is the honest channel and the stronger
+  technical claim. See `docs/FEATURE_REVIEW.md`.
+- **A demand-prediction model trained on simulated data.** "We trained it on data we generated" is a
+  credibility landmine in front of a technical jury. The static zone × hour table tells the same story
+  honestly and survives the follow-up question.
+- **Traffic-aware routing or multi-order route optimisation.** Routing needs a network API, which
+  forfeits the on-device story the handbook explicitly rewards. Route optimisation is a TSP variant.
+- **Daily-earnings dashboards, streaks, gamification.** Retention features. Nothing in the rubric
+  scores retention and no judge sees day two.
+- **Camera-based fatigue monitoring.** Dropped in favour of OCR ingestion (ADR-018) — it was a sensor
+  looking for a justification.
 - Any account, login, or sync flow.
 - A trained ML model for scoring. The EWMA heuristic tells the same story on stage and is explainable
   under questioning, which a half-trained model is not.
 - Support for more than the 5 seeded apps.
 - A settings screen beyond: language picker, daily earnings goal, reload-config button.
 - Automating the accept tap in the gig app itself. It would break platform terms and it is the one
-  thing that turns a defensible assistant into an indefensible bot. **Sarthi advises; the driver acts.**
+  thing that turns a defensible assistant into an indefensible bot. **Pillion advises; the driver acts.**
 
 ---
 
@@ -95,13 +112,15 @@ Follow this even under time pressure. Do not start step N+1 while step N is brok
 10.  Tier B ML Kit Entity Extraction                         [T1.4]  Green
 11.  Tier C Gemma via MediaPipe  — HARD CUTOFF Sun 00:00     [T3.1]  Green
 12.  Adaptive EWMA threshold + accept/reject learning        [T1.3]  Green
-13.  Earnings goal + urgency term                            [T1.5]  Green
+13.  Shift Strategist: goal, required rate, spoken coaching  [T1.5]  Green
 14.  Pune zone × hour table + return-leg penalty             [T1.6]  Green
-15.  Voice command loop (on-device ASR)                      [T3.2]  Green
+15.  Zero-Look Mode + motion trigger                          [T1.7]  Green
+15b. Voice command loop, LLM intent parsing                   [T1.8]  Green
+15c. Priority preference + Home Direction (cheap, if time)    [T2.6/7] Green
 ─────────────────────────────────────────────────────────── FREEZE · Sun 06:30
 16.  Demo hardening, dry runs ×3, backup video               [T2.4/5]
 ─────────────────────────────────────────────────────────── EVAL 2 · Sun 09:00
-17.  Camera fatigue check (single shot)                      [T3.3]  only if clean
+17.  Camera OCR ingestion (ML Kit Text Recognition)           [T3.3]  only if clean
 18.  GPS consistency check                                   [T3.4]  only if clean
 ```
 
@@ -115,7 +134,7 @@ are behind at Sun 04:00, cut from the bottom of the list, never from the middle.
 The format's biggest avoidable loss is idling during the phone-only stretch. These are all
 genuinely phone-first tasks — nobody should ever be waiting for Green Light.
 
-1. **Tune `parsers.json` on the phone.** Open `/sdcard/Sarthi/config/parsers.json` in a text editor,
+1. **Tune `parsers.json` on the phone.** Open `/sdcard/Pillion/config/parsers.json` in a text editor,
    change a regex, hit *Reload config* in the app, fire the matching `:gigsim` payload, see whether
    it parses. Full iteration loop, no laptop, no rebuild. This is the highest-value Red Light work
    in the whole plan.

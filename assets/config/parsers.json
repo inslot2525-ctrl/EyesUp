@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_comment": "Seed patterns. Group 1 of each regex is the value. Patterns are tried in order; first match wins. Tune this file directly on the device at /sdcard/Sarthi/config/parsers.json and press Reload config in Settings - no rebuild needed. See docs/NOTIFICATION_CORPUS.md for the payloads these must handle.",
+  "_comment": "Seed patterns. Group 1 of each regex is the value. Patterns are tried in order; first match wins. Tune this file directly on the device at /sdcard/Pillion/config/parsers.json and press Reload config in Settings - no rebuild needed. See docs/NOTIFICATION_CORPUS.md for the payloads these must handle.",
 
   "rejectPatterns": [
     "(?i)you\\s+earned",

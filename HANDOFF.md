@@ -13,20 +13,24 @@
 
 | Field | Value |
 |---|---|
-| **Last updated** | 2026-09-05 · pre-hacking planning session |
+| **Last updated** | 2026-09-05 11:05 IST · handbook + feature-list integration |
 | **Updated by** | Agent A (Arnav's Claude Code, Opus 5) |
-| **Event clock** | Hacking has not started. Starts Sat 11:00. |
+| **Event clock** | **Hacking begins 11:00.** Now in the 11:00-14:00 GREEN window - the longest laptop block before Eval 1 (19:00). |
 | **Current phase** | Pre-event / Hour-0 prep |
 | **Build state** | **No code exists yet.** Planning and specification only. |
-| **Last commit** | `1003921` — spec: Sarthi plan, build spec and two-agent relay infrastructure |
-| **Latest PROGRESS entry** | `E-001` |
-| **Next task** | See `PROGRESS.md` → E-001 → NEXT INSTRUCTION |
+| **Last commit** | `1003921` — spec: Pillion plan, build spec and two-agent relay infrastructure |
+| **Latest PROGRESS entry** | `E-002` |
+| **Next task** | See `PROGRESS.md` -> E-002 -> NEXT INSTRUCTION. Scaffold Gradle, write `model/` first, then `:gigsim`. |
 
 ### What works right now
-- Nothing is built. The complete specification exists and is internally consistent.
+- Nothing is built. The specification is complete, matches the official handbook, and is internally
+  consistent. Feature set decided and tiered; 18 ADRs recorded.
 
 ### What is broken or unverified right now
-- Everything device-related is **unverified** — we have not touched the loaner phone.
+- Everything device-related is **unverified** - we have not touched the loaner phones.
+- The Red/Green windows in gameplan §4 are read off a photographed bar chart. The handbook says
+  timings may vary and will be announced at the venue. **Confirm and correct in place.**
+- The seven track names are unknown.
 - All library versions in `docs/BUILD_SPEC.md` are marked `VERIFY` and must be confirmed at first
   Gradle sync.
 
@@ -35,7 +39,7 @@
 |---|---|---|---|
 | B1 | Git initialised locally and committed, but **no remote is set**, so the relay has no transport | Human | A private GitHub repo exists, `git remote add origin` + `git push -u origin main` is done, and the teammate has cloned it |
 | B2 | Loaner device not in hand | Human | Check-in, Sat 08:00 |
-| B3 | Gemma `.task` model not staged on the laptop | Human | Downloaded over home/hotel Wi-Fi, **not** venue Wi-Fi |
+| B3 | Neither model file staged | Human | 1B (~550 MB) and 3-4B (~2.5 GB) downloaded and pushed to the phone during the 11:00-14:00 green window (ADR-012) |
 
 ---
 
@@ -55,6 +59,18 @@ They never run at the same time on the same files. Coordination is entirely thro
 3. Rewrite **Section 1** of this file: snapshot, what works, what is broken, blockers.
 4. `git add -A && git commit -m "handoff: <one line>" && git push`
 5. Tell the human, in one line: what landed, what is next, and anything they must do by hand.
+6. **Confirm your `➡️ NEXT INSTRUCTION` ends with the handoff reminder** (see below). The protocol only
+   survives if every session passes it on.
+
+**Every `➡️ NEXT INSTRUCTION` must end with this line, verbatim:**
+
+> **Before you finish:** you own the handoff too. Keep `PROGRESS.md` current as you go, run the
+> *Ending a session* checklist in `HANDOFF.md` §2 in full, and end your own NEXT INSTRUCTION with this
+> same reminder. Assume your session could end without warning.
+
+**Hand off early rather than late.** Usage limits do not warn you. If you are unsure whether you have
+room for one more feature, you do not — write the handoff instead. A clean handoff with a half-finished
+feature beats a finished feature the next agent cannot find or trust.
 
 ### Starting a session (the incoming agent's checklist)
 
@@ -65,6 +81,8 @@ They never run at the same time on the same files. Coordination is entirely thro
 5. `git log --oneline -15` and `git status` — trust the repo over the prose.
 6. If `app/` exists, run the build sanity check (`docs/DEVICE_AND_TOOLING_SETUP.md` §7).
 7. Start on the last `➡️ NEXT INSTRUCTION` unless the human redirects you.
+8. **Accept that you now own the next handoff.** Write your first `PROGRESS.md` entry before you write
+   any code, so that even a five-minute session leaves a trace.
 
 ### Rules that prevent relay collisions
 
@@ -79,7 +97,7 @@ They never run at the same time on the same files. Coordination is entirely thro
 
 ## Section 3 — Thirty-second product brief (stable)
 
-**Sarthi** is an Android app for gig drivers. It reads incoming order notifications from Uber, Rapido,
+**Pillion** is an Android app for gig drivers. It reads incoming order notifications from Uber, Rapido,
 Swiggy, Zomato and Porter at the OS level, extracts payout / trip distance / pickup distance / ETA
 using a three-tier on-device NLU cascade, scores each offer against the driver's own history, their
 daily earnings goal and the drop zone's return prospects, **compares it against every other offer
@@ -126,5 +144,5 @@ it exercises the real notification pipeline, and it makes the demo repeatable.
 | Android Studio version | *(fill in)* |
 | JDK version | *(fill in — 17 expected)* |
 | Gemma model path (laptop) | *(fill in)* |
-| Gemma model path (device) | `/sdcard/Android/data/com.sarthi.copilot/files/llm/model.task` — app-private external dir, readable by the app on every target API level. Do **not** use `/data/local/tmp/`; it is not readable by a normal app on all ROMs. |
-| Config dir on device | `/sdcard/Sarthi/config/` — falls back to `/sdcard/Android/data/com.sarthi.copilot/files/config/` if scoped storage blocks it (`scripts/push-config.sh` detects this and tells you) |
+| Gemma model path (device) | `/sdcard/Android/data/com.pillion.app/files/llm/model.task` — app-private external dir, readable by the app on every target API level. Do **not** use `/data/local/tmp/`; it is not readable by a normal app on all ROMs. |
+| Config dir on device | `/sdcard/Pillion/config/` — falls back to `/sdcard/Android/data/com.pillion.app/files/config/` if scoped storage blocks it (`scripts/push-config.sh` detects this and tells you) |

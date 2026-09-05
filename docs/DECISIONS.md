@@ -141,7 +141,7 @@ needs to be large, cap it at 200 records and drop the oldest.
 **Date:** 2026-09-05 · **Status:** Accepted
 
 **Decision.** Parser patterns, scoring weights, the zone table, TTLs and TTS templates load from
-`/sdcard/Sarthi/config/*.json`, seeded from bundled assets on first run, with a **Reload config**
+`/sdcard/Pillion/config/*.json`, seeded from bundled assets on first run, with a **Reload config**
 button in Settings.
 
 **Why.** This is the single most valuable Red Light unlock in the plan. Red Light is ~55% of the
@@ -152,36 +152,40 @@ you show the config and say it is tunable, which reads as engineering rather tha
 
 **Consequence.** Nothing tunable may be hardcoded in Kotlin. A malformed config falls back to the
 bundled asset and shows a toast — it must never crash. Requires a phone text editor installed in
-Hour 0, and a `VERIFY` on scoped-storage access to `/sdcard/Sarthi/` on the loaner's API level.
+Hour 0, and a `VERIFY` on scoped-storage access to `/sdcard/Pillion/` on the loaner's API level.
 
 ---
 
-## ADR-008 — The product is named Sarthi; the code identifier never changes
-**Date:** 2026-09-05 · **Status:** Accepted
+## ADR-008 — The product is named Pillion; the code identifier never changes
+**Date:** 2026-09-05 · **Status:** Accepted (revised from "Sarthi" the same morning, before any code existed)
 
-**Decision.** Display name **Sarthi** (सारथी, the charioteer). `applicationId` fixed at
-`com.sarthi.copilot` on day one.
+**Decision.** The product is **Pillion**. `applicationId` fixed at `com.pillion.app` from the first
+commit.
 
-**Why.** "Driver Copilot" is descriptive but generic. Sarthi is the word for the person who drives
-the chariot while the warrior fights — Krishna was Arjuna's sarthi — so it means "the one who
-handles the driving decisions for you" natively in both Marathi and Hindi, in front of a Pune jury.
+**Why.** A pillion is the person who rides behind you. Every gig driver in India knows the word from
+the vehicle they ride all day, it is one word, and it names the product's role exactly - the one
+riding along, watching, telling you what to do. Critically it sounds nothing like an AI product,
+which is the right register when the differentiator is a *decision*, not a model. "Sarthi" was the
+earlier pick and is a good name, but it is a category Indian hackathons are saturated with; "Dhruv"
+was the other runner-up.
+
 Fixing the identifier separately from the display name means a late change of heart about branding
 costs one string, not a refactor.
 
-**Consequence.** If the team prefers the old name, change only the display string. Never rename the
-package mid-build.
+**Consequence.** Never rename the package mid-build. Renaming now was free because no code existed;
+after the first source commit it is not, and ADR-014 puts that commit at 11:00.
 
 ---
 
-## ADR-009 — Sarthi never automates an action inside another app
+## ADR-009 — Pillion never automates an action inside another app
 **Date:** 2026-09-05 · **Status:** Accepted
 
 **Decision.** No accessibility-service tapping, no auto-accept, no interaction with any gig app's UI.
-Sarthi reads notifications and speaks. The driver acts.
+Pillion reads notifications and speaks. The driver acts.
 
 **Why.** Auto-accepting would breach every platform's terms, would be the one thing that turns a
 defensible driver-side assistant into an indefensible bot, and is exactly the objection a sharp judge
-reaches for. Declining to build it is also a better answer than defending it: "Sarthi advises, the
+reaches for. Declining to build it is also a better answer than defending it: "Pillion advises, the
 driver taps" ends that line of questioning in one sentence.
 
 **Consequence.** The `ACCEPT` voice intent marks our internal record and updates the threshold — it
@@ -204,6 +208,152 @@ reads as rigour, being caught on one reads as overselling.
 
 **Consequence.** T3.3 is attempted only after Eval 2 is clean, and it is cut without discussion if
 anything in Tier 0 or Tier 1 is shaky.
+
+---
+
+## ADR-011 — The local LLM runs in shadow mode on every notification, and writes the explanations
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Context.** The handbook (p.01) says HackTracker *"reads model outputs, and logs inference calls,
+tokens and thermals in real time."* On-device inference is therefore mechanically counted toward the
+15% Creative Phone Use line. ADR-004 had the LLM as a rarely-triggered last-resort fallback, which
+would fire on almost nothing and bank almost nothing.
+
+**Decision.** The local LLM runs on **every** captured notification, in parallel with the regex path
+rather than after it, and it additionally generates the long-form "why" explanations and parses voice
+intents.
+
+**Why.** Two genuine product uses, not padding: shadow extraction gives us a live confidence check
+against the deterministic path (and the UI can show "the local model agrees", which is a good demo
+beat), and natural-language explanation and intent parsing are exactly what a small LLM is for. The
+regex path still owns the demo-critical fast lane, so reliability is unaffected. And every inference
+is measured.
+
+**Rejected.** Firing the model on a timer with synthetic input purely to generate telemetry. We could
+not defend it and we do not need to.
+
+**Consequence.** `ParserCascade` gains a shadow path that never blocks the verdict. `LlmParser` must
+be non-blocking, cancellable and strictly single-instance. If inference cost becomes a thermal
+problem, throttle the shadow path — never the fast path.
+
+---
+
+## ADR-012 — Stage two model sizes; the device is far stronger than assumed
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Context.** The loaner is an iQOO 15: Snapdragon 8 Elite Gen 5, dedicated Q3 chip, 16 GB LPDDR5X,
+14,000 mm² vapour chamber. The handbook says it *"runs quantised local LLMs at usable speed"*.
+
+**Decision.** Stage both `gemma3-1b-it-int4` (~550 MB, safe) and a 3–4B int4 `.task` (~2.5 GB,
+ambitious). Ship whichever loads and performs. Push both in the 11:00–14:00 green window.
+
+**Why.** Gemma 3 1B underuses this hardware, and extraction quality on messy notification text
+improves noticeably at 3–4B. The vapour chamber means sustained inference is realistic, which is what
+shadow mode (ADR-011) needs. But the 4B download is the risk, so the 1B remains the guaranteed path.
+
+**Consequence.** If the 4B is not downloaded by 13:00, ship the 1B and stop. The hard Tier C cutoff at
+Sun 00:00 (`RISKS_AND_FALLBACKS.md` §3.3) still applies to both.
+
+---
+
+## ADR-013 — GigSim runs on a second loaner phone
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Decision.** Phone A = Pillion (demo), Phone B = GigSim, Phone C = ops. Label them physically.
+
+**Why.** One flagship loaner per person (handbook p.02), so a 2–3 person team has spare devices and
+nobody needs to bring a personal phone. It also means all three devices are generating telemetry
+rather than one.
+
+**Consequence.** The demo needs two phones on stage. Both must be charged and both must be in the
+venue — the devices are iQOO property and cannot leave.
+
+---
+
+## ADR-014 — No source code exists before 11:00 Saturday
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Context.** Handbook p.03: *"Original work only: code written during the event window. No shipping a
+pre-built product... Organisers may verify a project was built inside the event window."*
+
+**Decision.** Planning documents, specifications and config seeds are written before the start — those
+are not a product. **The first source commit must be timestamped after 11:00.**
+
+**Why.** Compliance, obviously. But also: a clean commit trail starting at 11:00 is an *asset*. If
+anyone asks whether this was built in-window, we offer the git history rather than defending
+ourselves.
+
+**Consequence.** Commit small and often from 11:00 onward — the history is evidence, so make it
+legible.
+
+---
+
+## ADR-015 — OpenRouter credits are for coding assistance only, never in the product
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Decision.** The $25 of OpenRouter credit is used for agentic coding tools. **No shipped code path
+makes a network call to any model.**
+
+**Why.** The handbook's own tip to win (p.04): *"Build apps that run locally and on-device, including
+the backend, using on-device LLMs... The highest on-device builds will be preferred for the Top 10."*
+A single cloud call in the product forfeits the exact thing we are strongest on, for capability we do
+not need. On-device inference also costs zero credits.
+
+**Consequence.** There is no networking dependency in the app at all. If a judge asks what happens
+offline, the answer is "nothing changes" — and they can test it.
+
+---
+
+## ADR-016 — Scoring is net earnings per hour, not gross rupees per kilometre
+**Date:** 2026-09-05 · **Status:** Accepted · **Refines ADR-005**
+
+**Decision.** The headline metric is **net ₹/hour**: payout, minus fuel cost over the *effective*
+distance (trip + pickup), divided by effective time. Fuel cost is personalised from one onboarding
+question ("what's your mileage?") and a petrol price in config.
+
+**Why.** Gross ₹/km was half-right. Drivers care about what they keep, and time — not distance — is
+the scarce resource, so ₹/hour is the correct comparator. "This pays ₹100, you net ₹64, that's ₹236 an
+hour not ₹393" is a materially stronger line than any per-km figure, and the fuel model makes the
+deadhead insight concrete: unpaid pickup kilometres now cost actual rupees.
+
+**Consequence.** `OrderOffer` gains derived `netRupees` and `netPerHour`. `ScoringConfig` gains
+`petrolPricePerLitre`; `DriverProfile` gains `vehicleKmpl`. The spoken template leads with ₹/hour.
+Every demo payload's ranking must be hand-verified against this formula — see `NOTIFICATION_CORPUS.md`
+§4.
+
+---
+
+## ADR-017 — Zero-Look Mode is a named feature with a motion trigger
+**Date:** 2026-09-05 · **Status:** Accepted
+
+**Decision.** Above a motion threshold (accelerometer / Activity Recognition), the UI collapses to one
+large card, touch interaction is refused with a spoken explanation, and the product is voice-only.
+
+**Why.** Mechanically this is close to what the app already did — the *name* and the trigger are the
+upgrade, and a named hero feature is worth real points in a 90-second pitch. It also banks another
+sensor for Creative Phone Use, and it is the cleanest expression of the reframe: the decision moves
+off the screen entirely.
+
+**Consequence.** Never claim it makes driving safe. It is a safety-oriented mode, framed as reducing
+what the product asks of the driver's attention — not as a guarantee.
+
+---
+
+## ADR-018 — Camera OCR ingestion replaces the camera fatigue check
+**Date:** 2026-09-05 · **Status:** Accepted · **Supersedes ADR-010**
+
+**Decision.** The camera feature is a stationary "point at an order screen" path: ML Kit Text
+Recognition (offline, on-device) → the same normaliser → the same decision engine. The fatigue check
+is dropped.
+
+**Why.** The roadmap previously cut screen-OCR as camera-use-for-its-own-sake. That was wrong for this
+version of it: OCR ingestion is a coherent *second input path* for platforms whose notifications are
+too sparse to parse, so the camera is doing something the product actually needs. The fatigue check
+was the opposite — a sensor looking for a justification, with a mount caveat we would have had to
+apologise for on stage.
+
+**Consequence.** ADR-010 is superseded; do not build the fatigue check. Both remain Tier 3 —
+attempted only after Eval 2 is clean.
 
 ---
 

@@ -4,5 +4,5 @@ set -euo pipefail
 DEVICE_ARG=""
 if [ $# -ge 1 ]; then DEVICE_ARG="-s $1"; fi
 adb $DEVICE_ARG logcat -c
-echo "==> tailing Sarthi + crashes. Ctrl-C to stop."
-adb $DEVICE_ARG logcat | grep --line-buffered -E "Sarthi|AndroidRuntime|FATAL|MediaPipe|MLKit"
+echo "==> tailing Pillion + crashes. Ctrl-C to stop."
+adb $DEVICE_ARG logcat | grep --line-buffered -E "Pillion|AndroidRuntime|FATAL|MediaPipe|MLKit"

@@ -16,11 +16,11 @@ Markers used below:
 
 | Thing | Value |
 |---|---|
-| Root Gradle project | `sarthi` |
-| Main app module | `:app` — applicationId `com.sarthi.copilot` |
-| Simulator module | `:gigsim` — applicationId `com.sarthi.gigsim` |
-| App display name | `Sarthi` |
-| Simulator display name | `Sarthi GigSim` |
+| Root Gradle project | `pillion` |
+| Main app module | `:app` — applicationId `com.pillion.app` |
+| Simulator module | `:gigsim` — applicationId `com.pillion.gigsim` |
+| App display name | `Pillion` |
+| Simulator display name | `Pillion GigSim` |
 | minSdk | 26 |
 | targetSdk / compileSdk | 35 |
 | Kotlin JVM target | 17 |
@@ -33,7 +33,7 @@ Markers used below:
 
 `settings.gradle.kts`:
 ```kotlin
-rootProject.name = "sarthi"
+rootProject.name = "pillion"
 include(":app", ":gigsim")
 ```
 
@@ -79,8 +79,8 @@ kotlinx-serialization.
 ## 3. Package layout (`:app`)
 
 ```
-com.sarthi.copilot
-├── SarthiApplication.kt          // constructs the pipeline singleton
+com.pillion.app
+├── PillionApplication.kt          // constructs the pipeline singleton
 ├── model/                        // SHARED — change only with an ADR
 │   ├── NotificationEvent.kt
 │   ├── OrderOffer.kt
@@ -89,12 +89,12 @@ com.sarthi.copilot
 │   ├── Enums.kt                  // OfferKind, Decision, ReasonCode, ExtractionMethod, Lang
 │   └── DriverProfile.kt
 ├── config/
-│   ├── ConfigRepository.kt       // load + hot reload from /sdcard/Sarthi/config/
+│   ├── ConfigRepository.kt       // load + hot reload from /sdcard/Pillion/config/
 │   ├── ParsersConfig.kt
 │   ├── ScoringConfig.kt
 │   └── TtsTemplatesConfig.kt
 ├── capture/
-│   ├── SarthiNotificationListener.kt
+│   ├── PillionNotificationListener.kt
 │   └── NotificationEventBus.kt   // MutableSharedFlow<NotificationEvent>
 ├── parse/
 │   ├── ParserCascade.kt
@@ -113,7 +113,7 @@ com.sarthi.copilot
 │   ├── VerdictPhraser.kt
 │   └── VoiceCommandListener.kt
 ├── pipeline/
-│   └── SarthiPipeline.kt         // wires 1→2→3→4→5, owns the CoroutineScope
+│   └── PillionPipeline.kt         // wires 1→2→3→4→5, owns the CoroutineScope
 └── ui/
     ├── MainActivity.kt
     ├── HomeScreen.kt             // offer cards + threshold bar + listener status
@@ -137,7 +137,7 @@ enum class GigApp(val pkg: String, val label: String, val defaultTtlSeconds: Int
     UNKNOWN("",                          "Unknown",30);
 
     companion object {
-        // :gigsim posts from com.sarthi.gigsim; the channel id carries the impersonated app,
+        // :gigsim posts from com.pillion.gigsim; the channel id carries the impersonated app,
         // so resolution must check the channel id first, then the package.
         fun fromChannelOrPackage(channelId: String?, pkg: String): GigApp = ...
     }
@@ -171,7 +171,7 @@ enum class ReasonCode {
 @Serializable
 data class NotificationEvent(
     val id: String,               // UUID
-    val sourcePackage: String,    // the posting package (com.sarthi.gigsim in the demo)
+    val sourcePackage: String,    // the posting package (com.pillion.gigsim in the demo)
     val channelId: String?,
     val app: GigApp,              // resolved gig app
     val title: String?,
@@ -361,7 +361,7 @@ after the last `}` before parsing. Any parse failure returns null — never thro
 ## 7. Config files — schema and location
 
 Bundled at `app/src/main/assets/config/*.json`. On first run, `ConfigRepository` copies them to
-`/sdcard/Sarthi/config/`. Thereafter that directory wins, so it can be edited on the phone. The
+`/sdcard/Pillion/config/`. Thereafter that directory wins, so it can be edited on the phone. The
 Settings screen has a **Reload config** button that re-reads without restarting the app. A malformed
 file falls back to the bundled asset and shows a toast — **never crashes**.
 
@@ -412,7 +412,7 @@ A single Compose screen. One button per corpus payload, grouped by app, plus:
 
 Implementation notes:
 - One `NotificationChannel` per impersonated app, `channelId = "sim_uber"`, `"sim_rapido"`, etc.
-  `SarthiNotificationListener` resolves the `GigApp` from the channel id.
+  `PillionNotificationListener` resolves the `GigApp` from the channel id.
 - Channel *name* must read `SIM · Rapido`, not `Rapido`. **We do not impersonate real companies; we
   label the simulation honestly.** A judge who pulls down the shade sees the truth.
 - Use `NotificationCompat.BigTextStyle` so `EXTRA_BIG_TEXT` is populated — several corpus payloads
@@ -436,9 +436,9 @@ Implementation notes:
                  android:maxSdkVersion="32"/>
 
 <service
-    android:name=".capture.SarthiNotificationListener"
+    android:name=".capture.PillionNotificationListener"
     android:exported="true"
-    android:label="Sarthi"
+    android:label="Pillion"
     android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
     <intent-filter>
         <action android:name="android.service.notification.NotificationListenerService"/>
@@ -451,9 +451,9 @@ Open the grant screen with
 Check whether it is granted with
 `NotificationManagerCompat.getEnabledListenerPackages(context).contains(packageName)`.
 
-**On API 33+, writing to `/sdcard/Sarthi/` needs `MANAGE_EXTERNAL_STORAGE` or the app-specific
+**On API 33+, writing to `/sdcard/Pillion/` needs `MANAGE_EXTERNAL_STORAGE` or the app-specific
 external dir.** `VERIFY` on the device. If scoped storage blocks it, use
-`getExternalFilesDir(null)` → `/sdcard/Android/data/com.sarthi.copilot/files/config/` instead and
+`getExternalFilesDir(null)` → `/sdcard/Android/data/com.pillion.app/files/config/` instead and
 update every reference to the config path in one commit.
 
 ---
@@ -478,7 +478,7 @@ No UI tests. No instrumentation tests. There is not time and they will not pay f
 ./gradlew :app:testDebugUnitTest
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb install -r gigsim/build/outputs/apk/debug/gigsim-debug.apk
-adb shell am start -n com.sarthi.copilot/.ui.MainActivity
+adb shell am start -n com.pillion.app/.ui.MainActivity
 ```
 All five succeed → healthy. Run this before every handoff and record the result in your PROGRESS
 entry.

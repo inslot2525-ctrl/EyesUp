@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_comment": "Seed scoring config. Tune on the device at /sdcard/Sarthi/config/scoring.json and press Reload config. Formula is specified in docs/BUILD_SPEC.md section 5 - implement it exactly, then tune here. Tuning knobs for common symptoms are in docs/RISKS_AND_FALLBACKS.md section 4.",
+  "_comment": "Seed scoring config. Tune on the device at /sdcard/Pillion/config/scoring.json and press Reload config. Formula is specified in docs/BUILD_SPEC.md section 5 - implement it exactly, then tune here. Tuning knobs for common symptoms are in docs/RISKS_AND_FALLBACKS.md section 4.",
 
   "hourBuckets": {
     "EARLY":     [5, 8],

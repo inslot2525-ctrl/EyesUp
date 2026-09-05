@@ -1,4 +1,4 @@
-# Sarthi — iQOO City Battles Pune 2026
+# Pillion — iQOO City Battles Pune 2026
 
 On-device Android copilot for gig drivers. Reads incoming order notifications at the OS level,
 extracts payout / distance / pickup distance with a three-tier on-device NLU cascade, scores each
