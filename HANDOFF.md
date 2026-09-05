@@ -126,5 +126,5 @@ it exercises the real notification pipeline, and it makes the demo repeatable.
 | Android Studio version | *(fill in)* |
 | JDK version | *(fill in — 17 expected)* |
 | Gemma model path (laptop) | *(fill in)* |
-| Gemma model path (device) | `/data/local/tmp/llm/gemma3-1b-it-int4.task` |
-| Config dir on device | `/sdcard/Sarthi/config/` |
+| Gemma model path (device) | `/sdcard/Android/data/com.sarthi.copilot/files/llm/model.task` — app-private external dir, readable by the app on every target API level. Do **not** use `/data/local/tmp/`; it is not readable by a normal app on all ROMs. |
+| Config dir on device | `/sdcard/Sarthi/config/` — falls back to `/sdcard/Android/data/com.sarthi.copilot/files/config/` if scoped storage blocks it (`scripts/push-config.sh` detects this and tells you) |
