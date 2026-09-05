@@ -18,7 +18,7 @@
 | **Event clock** | Hacking has not started. Starts Sat 11:00. |
 | **Current phase** | Pre-event / Hour-0 prep |
 | **Build state** | **No code exists yet.** Planning and specification only. |
-| **Last commit** | *(none — repo not yet initialised; see Blocker B1)* |
+| **Last commit** | `1003921` — spec: Sarthi plan, build spec and two-agent relay infrastructure |
 | **Latest PROGRESS entry** | `E-001` |
 | **Next task** | See `PROGRESS.md` → E-001 → NEXT INSTRUCTION |
 
@@ -33,7 +33,7 @@
 ### Blockers
 | ID | Blocker | Owner | Unblocks when |
 |---|---|---|---|
-| B1 | Repo is not on a git remote, so the relay has no transport | Human | A private GitHub repo exists and both machines have cloned it |
+| B1 | Git initialised locally and committed, but **no remote is set**, so the relay has no transport | Human | A private GitHub repo exists, `git remote add origin` + `git push -u origin main` is done, and the teammate has cloned it |
 | B2 | Loaner device not in hand | Human | Check-in, Sat 08:00 |
 | B3 | Gemma `.task` model not staged on the laptop | Human | Downloaded over home/hotel Wi-Fi, **not** venue Wi-Fi |
 
@@ -119,7 +119,7 @@ it exercises the real notification pipeline, and it makes the demo repeatable.
 |---|---|
 | Primary working dir | `C:\Projects\iqoo` |
 | Platform | Windows 11, PowerShell + Git Bash both available |
-| Git remote | *(not set — see B1)* |
+| Git remote | *(not set — see B1)*  ·  local branch: `main`, 1 commit |
 | Loaner device model | *(fill in at check-in)* |
 | Android version / OS skin | *(fill in — expect Funtouch OS)* |
 | Device serial for `adb -s` | *(fill in)* |
