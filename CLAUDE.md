@@ -1,6 +1,6 @@
 # CLAUDE.md — Read this first, every session
 
-You are working on **Pillion** (product name; internal/legacy name "Driver Copilot"), an Android app
+You are working on **EyesUp** (product name; internal/legacy name "Driver Copilot"), an Android app
 built during the **iQOO City Battles Pune hackathon, Sat 5 – Sun 6 Sept 2026**, a 30-hour
 phone-first build.
 
@@ -47,7 +47,7 @@ if you hit your limit mid-task, the log must already be current. **The log is th
 **R2 — Every entry ends with an instruction.** The `➡️ NEXT INSTRUCTION` block is written *for a
 different agent with zero context*. It must name exact files, exact commands, and an acceptance
 criterion. "Continue the parser" is a failed instruction. "Add a `RapidoParser` to
-`app/src/main/java/com/pillion/copilot/parse/regex/` matching the 3 payloads in
+`app/src/main/java/com/eyesup/copilot/parse/regex/` matching the 3 payloads in
 `docs/NOTIFICATION_CORPUS.md` §2.3; done when `RegexParserTest` passes 3/3" is a good one.
 
 **R3 — Commit constantly.** Small commits, present-tense messages, push after every entry.
@@ -76,7 +76,7 @@ every Office Kit session in PROGRESS.md.
 ## 2. What we are building, in one paragraph
 
 Gig drivers run 2–3 apps at once (Uber, Rapido, Swiggy, Zomato, Porter) and glance at the phone
-mid-ride to judge whether an incoming order is worth taking. Pillion is an on-device Android copilot
+mid-ride to judge whether an incoming order is worth taking. EyesUp is an on-device Android copilot
 that reads incoming order notifications at the OS level, extracts payout/distance/pickup-time with a
 three-tier on-device NLU stack, scores each offer against the driver's own history, their earnings
 goal, the time of day and the drop zone's return prospects — **and compares it against every other
@@ -84,7 +84,7 @@ offer currently open across all their apps** — then speaks a one-line verdict 
 English. Nothing leaves the device.
 
 **The headline feature is cross-app arbitration.** A human cannot compare a Swiggy order against a
-Rapido offer that arrived 40 seconds ago while driving. Pillion can. Lead with that.
+Rapido offer that arrived 40 seconds ago while driving. EyesUp can. Lead with that.
 
 ---
 

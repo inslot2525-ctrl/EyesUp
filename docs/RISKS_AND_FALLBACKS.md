@@ -35,7 +35,7 @@ Is the demo path working end-to-end right now?
 
 **Time box: 30 minutes.**
 
-1. `adb shell dumpsys notification | grep -i pillion` — is the listener bound?
+1. `adb shell dumpsys notification | grep -i eyesup` — is the listener bound?
 2. `NotificationManagerCompat.getEnabledListenerPackages()` — does it contain us?
 3. Toggle notification access **off and back on**. This rebinds the service and fixes it more often
    than any code change. Do this before debugging anything.
@@ -52,9 +52,9 @@ not a demo path.** If the demo ever runs on the injector, you must say so on sta
 
 This is R2, and on a vivo/iQOO device it is the most likely failure of the whole event.
 
-1. Battery → find Pillion → **do not optimise / allow high background power consumption**
-2. Autostart / Auto-launch → **enable** for Pillion
-3. Recent-apps screen → long-press Pillion's card → **lock** it
+1. Battery → find EyesUp → **do not optimise / allow high background power consumption**
+2. Autostart / Auto-launch → **enable** for EyesUp
+3. Recent-apps screen → long-press EyesUp's card → **lock** it
 4. Start the foreground service with `FOREGROUND_SERVICE_SPECIAL_USE` and a persistent notification
 5. Re-run the 10-minute idle test: post a `:gigsim` notification after 10 minutes of screen-off idle
 
@@ -73,7 +73,7 @@ update its timer. Test with corpus X5.
 
 **Time box: 20 minutes per app, and you fix it in JSON, not Kotlin.**
 
-Edit `/sdcard/Pillion/config/parsers.json` on the phone, press **Reload config**, re-fire the payload.
+Edit `/sdcard/EyesUp/config/parsers.json` on the phone, press **Reload config**, re-fire the payload.
 This loop is seconds long and needs no laptop. If you find yourself editing Kotlin to fix a regex,
 stop — you have broken the design.
 
@@ -109,7 +109,7 @@ Log the decision in PROGRESS either way, with the reason.
 
 ## 4. Score is producing bad verdicts
 
-Almost always weights, not code. Fix in `/sdcard/Pillion/config/scoring.json`, reload, re-run the
+Almost always weights, not code. Fix in `/sdcard/EyesUp/config/scoring.json`, reload, re-run the
 STORM sequence.
 
 | Symptom | Knob |

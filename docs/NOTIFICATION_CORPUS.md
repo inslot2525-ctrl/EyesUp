@@ -14,7 +14,7 @@ The payloads the parser must handle, and the source of truth for `gigsim/src/mai
 
 > **Package names below are `VERIFY`.** It does not block anything: `:gigsim` posts from its own
 > package and carries the impersonated app in the notification **channel id**, and
-> `PillionNotificationListener` resolves the app from the channel id first. Package matching only
+> `EyesUpNotificationListener` resolves the app from the channel id first. Package matching only
 > matters if a real gig app is ever installed.
 
 ---
@@ -203,11 +203,11 @@ Post S1 twice within two seconds. The second must be suppressed by the 3-second 
 | 5.0 s | **U3** Uber ₹95 · 4.0 km · 6.5 km pickup | ₹9.05/km |
 
 Expected behaviour, and what to rehearse:
-1. At 0.0 s Pillion speaks a verdict on S1 alone (a marginal TAKE at market rate).
-2. At 2.5 s R1 arrives, scores higher, and Pillion speaks the **arbitration line**:
+1. At 0.0 s EyesUp speaks a verdict on S1 alone (a marginal TAKE at market rate).
+2. At 2.5 s R1 arrives, scores higher, and EyesUp speaks the **arbitration line**:
    *"Take the Rapido one — ₹142 for 9 kilometres. That's 44% better than the Swiggy order."*
 3. At 5.0 s U3 arrives, is beaten by the still-live R1, and is skipped with
-   `BEATEN_BY_OTHER_OFFER` + `LONG_DEADHEAD`. Pillion does not re-announce a winner it already named.
+   `BEATEN_BY_OTHER_OFFER` + `LONG_DEADHEAD`. EyesUp does not re-announce a winner it already named.
 
 **This is the money moment of the whole demo.** It must be deterministic. Verify the three rates
 above by hand against the implemented formula before Eval 1 and adjust the payloads — not the

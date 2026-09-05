@@ -141,7 +141,7 @@ needs to be large, cap it at 200 records and drop the oldest.
 **Date:** 2026-09-05 · **Status:** Accepted
 
 **Decision.** Parser patterns, scoring weights, the zone table, TTLs and TTS templates load from
-`/sdcard/Pillion/config/*.json`, seeded from bundled assets on first run, with a **Reload config**
+`/sdcard/EyesUp/config/*.json`, seeded from bundled assets on first run, with a **Reload config**
 button in Settings.
 
 **Why.** This is the single most valuable Red Light unlock in the plan. Red Light is ~55% of the
@@ -152,40 +152,41 @@ you show the config and say it is tunable, which reads as engineering rather tha
 
 **Consequence.** Nothing tunable may be hardcoded in Kotlin. A malformed config falls back to the
 bundled asset and shows a toast — it must never crash. Requires a phone text editor installed in
-Hour 0, and a `VERIFY` on scoped-storage access to `/sdcard/Pillion/` on the loaner's API level.
+Hour 0, and a `VERIFY` on scoped-storage access to `/sdcard/EyesUp/` on the loaner's API level.
 
 ---
 
-## ADR-008 — The product is named Pillion; the code identifier never changes
-**Date:** 2026-09-05 · **Status:** Accepted (revised from "Sarthi" the same morning, before any code existed)
+## ADR-008 - The product is named EyesUp; the code identifier never changes
+**Date:** 2026-09-05 - **Status:** Accepted (final; earlier candidates Sarthi and Pillion were dropped before any code existed)
 
-**Decision.** The product is **Pillion**. `applicationId` fixed at `com.pillion.app` from the first
-commit.
+**Decision.** The product is **EyesUp**. `applicationId` fixed at `com.eyesup.app` from the first
+source commit. Repo: `https://github.com/NotArnav03/EyesUp.git`.
 
-**Why.** A pillion is the person who rides behind you. Every gig driver in India knows the word from
-the vehicle they ride all day, it is one word, and it names the product's role exactly - the one
-riding along, watching, telling you what to do. Critically it sounds nothing like an AI product,
-which is the right register when the differentiator is a *decision*, not a model. "Sarthi" was the
-earlier pick and is a good name, but it is a category Indian hackathons are saturated with; "Dhruv"
-was the other runner-up.
+**Why.** It is an imperative, not a noun - it is the instruction the product exists to make possible,
+and it is what a driving instructor says. It names the *benefit* rather than the mechanism, which is
+the right level for a jury: nobody has to be told what EyesUp is for. It also lines up exactly with
+the two things the pitch now leads on - the reframe ("we move the decision from the screen to the
+voice layer", `DEMO_AND_PITCH.md` §1) and Zero-Look Mode (ADR-017). The name, the framing and the
+hero feature all say the same thing.
 
-Fixing the identifier separately from the display name means a late change of heart about branding
-costs one string, not a refactor.
+Earlier candidates: *Sarthi* (good, but a saturated register at Indian hackathons) and *Pillion*
+(accurate but describes the mechanism, not the outcome).
 
-**Consequence.** Never rename the package mid-build. Renaming now was free because no code existed;
-after the first source commit it is not, and ADR-014 puts that commit at 11:00.
+**Consequence.** Never rename the package mid-build. Renaming was free while no code existed; after
+the first source commit it is not, and ADR-014 puts that commit at 11:00. The display name and the
+identifier are separate, so a branding change later costs one string.
 
 ---
 
-## ADR-009 — Pillion never automates an action inside another app
+## ADR-009 — EyesUp never automates an action inside another app
 **Date:** 2026-09-05 · **Status:** Accepted
 
 **Decision.** No accessibility-service tapping, no auto-accept, no interaction with any gig app's UI.
-Pillion reads notifications and speaks. The driver acts.
+EyesUp reads notifications and speaks. The driver acts.
 
 **Why.** Auto-accepting would breach every platform's terms, would be the one thing that turns a
 defensible driver-side assistant into an indefensible bot, and is exactly the objection a sharp judge
-reaches for. Declining to build it is also a better answer than defending it: "Pillion advises, the
+reaches for. Declining to build it is also a better answer than defending it: "EyesUp advises, the
 driver taps" ends that line of questioning in one sentence.
 
 **Consequence.** The `ACCEPT` voice intent marks our internal record and updates the threshold — it
@@ -259,7 +260,7 @@ Sun 00:00 (`RISKS_AND_FALLBACKS.md` §3.3) still applies to both.
 ## ADR-013 — GigSim runs on a second loaner phone
 **Date:** 2026-09-05 · **Status:** Accepted
 
-**Decision.** Phone A = Pillion (demo), Phone B = GigSim, Phone C = ops. Label them physically.
+**Decision.** Phone A = EyesUp (demo), Phone B = GigSim, Phone C = ops. Label them physically.
 
 **Why.** One flagship loaner per person (handbook p.02), so a 2–3 person team has spare devices and
 nobody needs to bring a personal phone. It also means all three devices are generating telemetry

@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — Pillion
+# ARCHITECTURE.md — EyesUp
 
 Module boundaries, data flow, threading and ownership. This is the *why and where*.
 `BUILD_SPEC.md` is the *exactly what*. Read this first, then that.
@@ -14,7 +14,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
    produces a low-confidence offer that the UI badges and the scorer treats cautiously. A hackathon
    demo dies from an unhandled exception, never from a missing field.
 3. **Tunables live in JSON on the device, not in Kotlin.** Regexes, benchmarks, weights, TTLs and
-   speech templates all load from `/sdcard/Pillion/config/`. Changing behaviour must never require a
+   speech templates all load from `/sdcard/EyesUp/config/`. Changing behaviour must never require a
    rebuild — that is what makes Red Light productive.
 4. **One-way data flow.** Capture → Parse → Queue → Score → Speak. The only feedback edge is the
    driver's accept/reject updating the threshold. No module reaches backwards.
@@ -27,15 +27,15 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ :gigsim (separate APK, com.pillion.gigsim)                                │
+│ :gigsim (separate APK, com.eyesup.gigsim)                                │
 │   Buttons: one per corpus payload, plus "STORM" (3 offers in 6s)         │
 │   Posts real NotificationCompat notifications on per-app channels        │
 └──────────────────────────────┬───────────────────────────────────────────┘
                                │  Android OS notification bus
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [1] CAPTURE  ·  com.pillion.app.capture                               │
-│     PillionNotificationListener : NotificationListenerService             │
+│ [1] CAPTURE  ·  com.eyesup.app.capture                               │
+│     EyesUpNotificationListener : NotificationListenerService             │
 │     onNotificationPosted → filter by allow-listed package                │
 │     → read extras: title, text, bigText, subText, infoText               │
 │     → emit NotificationEvent onto a SharedFlow                           │
@@ -43,7 +43,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────┬───────────────────────────────────────────┘
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [2] PARSE  ·  com.pillion.app.parse                                   │
+│ [2] PARSE  ·  com.eyesup.app.parse                                   │
 │     ParserCascade.parse(event) : OrderOffer                              │
 │                                                                          │
 │       Tier A  RegexParser        ~1ms    patterns from parsers.json      │
@@ -60,7 +60,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────┬───────────────────────────────────────────┘
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [3] QUEUE  ·  com.pillion.app.queue                                   │
+│ [3] QUEUE  ·  com.eyesup.app.queue                                   │
 │     OfferQueue — every live offer across every app                       │
 │     Each offer has expiresAt = receivedAt + ttlSeconds(app)              │
 │     Expired offers are swept every 1s                                    │
@@ -68,7 +68,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────┬───────────────────────────────────────────┘
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [4] SCORE  ·  com.pillion.app.score                                   │
+│ [4] SCORE  ·  com.eyesup.app.score                                   │
 │     ScoringEngine.evaluate(offer, liveOffers, profile, clock) : Verdict  │
 │       · effectiveKm = tripKm + pickupKm       (deadhead counted)         │
 │       · ratePerKm   = payout / effectiveKm                               │
@@ -80,7 +80,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────┬───────────────────────────────────────────┘
                                ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [5] SPEAK  ·  com.pillion.app.voice                                   │
+│ [5] SPEAK  ·  com.eyesup.app.voice                                   │
 │     VerdictPhraser: Verdict + Lang → String, from tts_templates.json     │
 │     TtsSpeaker: android.speech.tts.TextToSpeech                          │
 │       · AudioAttributes USAGE_ASSISTANCE_NAVIGATION_GUIDANCE (ducks      │
@@ -89,7 +89,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────────────────────────────────────────────────┘
                                ▲
 ┌──────────────────────────────┴───────────────────────────────────────────┐
-│ [6] LEARN  ·  com.pillion.app.score.DriverProfile                     │
+│ [6] LEARN  ·  com.eyesup.app.score.DriverProfile                     │
 │     accept → acceptedEwma updated with this offer's score                │
 │     reject → rejectedEwma updated with this offer's score                │
 │     threshold = midpoint(acceptedEwma, rejectedEwma), clamped            │
@@ -97,7 +97,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 └──────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ [7] VOICE IN  ·  com.pillion.app.voice.VoiceCommandListener           │
+│ [7] VOICE IN  ·  com.eyesup.app.voice.VoiceCommandListener           │
 │     On-device SpeechRecognizer, push-to-talk                             │
 │     Intents: WHY · REPEAT · ACCEPT · SKIP · STATUS                       │
 │     WHY → speaks the last Verdict's reasons in full                      │
@@ -118,7 +118,7 @@ Module boundaries, data flow, threading and ownership. This is the *why and wher
 | TTS | main | `TextToSpeech` wants a main-thread-created instance |
 | UI | main, Compose collecting `StateFlow` | |
 
-The pipeline runs in a `PillionPipeline` singleton owned by the Application, on a
+The pipeline runs in a `EyesUpPipeline` singleton owned by the Application, on a
 `CoroutineScope(SupervisorJob() + Dispatchers.Default)`. The listener service and the UI both talk to
 it. This means the pipeline keeps working with no Activity on screen — which is the actual use case,
 since the driver's screen is showing Uber, not us.
@@ -135,8 +135,8 @@ No database. Three JSON files under `filesDir`:
 | `history.json` | last 200 `(offer, verdict, decision)` triples | after every decision |
 | `session.json` | shift start time, offers seen, offers taken | on change |
 
-Config is read from `/sdcard/Pillion/config/` if present, otherwise from bundled assets. See
-`BUILD_SPEC.md` §7. On first run the app copies its bundled assets to `/sdcard/Pillion/config/` so
+Config is read from `/sdcard/EyesUp/config/` if present, otherwise from bundled assets. See
+`BUILD_SPEC.md` §7. On first run the app copies its bundled assets to `/sdcard/EyesUp/config/` so
 there is something to edit.
 
 ---
@@ -148,14 +148,14 @@ can work simultaneously with essentially zero shared files.
 
 | Module | Package | Depends on | Can be built and tested standalone? |
 |---|---|---|---|
-| sim | `com.pillion.gigsim` (separate module) | corpus JSON | Yes — it is a whole separate app |
-| capture | `com.pillion.app.capture` | model | Needs a device; test with `:gigsim` |
-| parse | `com.pillion.app.parse` | model, config | **Yes** — pure unit tests against the corpus |
-| queue | `com.pillion.app.queue` | model | **Yes** — pure unit tests with a fake clock |
-| score | `com.pillion.app.score` | model, config | **Yes** — pure unit tests |
-| voice | `com.pillion.app.voice` | model, config | Needs a device for TTS/ASR |
-| ui | `com.pillion.app.ui` | everything | Compose previews |
-| model | `com.pillion.app.model` | nothing | **Shared — change only with an ADR** |
+| sim | `com.eyesup.gigsim` (separate module) | corpus JSON | Yes — it is a whole separate app |
+| capture | `com.eyesup.app.capture` | model | Needs a device; test with `:gigsim` |
+| parse | `com.eyesup.app.parse` | model, config | **Yes** — pure unit tests against the corpus |
+| queue | `com.eyesup.app.queue` | model | **Yes** — pure unit tests with a fake clock |
+| score | `com.eyesup.app.score` | model, config | **Yes** — pure unit tests |
+| voice | `com.eyesup.app.voice` | model, config | Needs a device for TTS/ASR |
+| ui | `com.eyesup.app.ui` | everything | Compose previews |
+| model | `com.eyesup.app.model` | nothing | **Shared — change only with an ADR** |
 
 `model` is the one shared surface. It holds the data classes and nothing else. Because it is shared,
 any change to it must be committed on its own, pushed immediately, and announced in PROGRESS.
@@ -182,7 +182,7 @@ any change to it must be committed on its own, pushed immediately, and announced
 
 ## 7. What is deliberately not in this architecture
 
-- No dependency-injection framework. Manual construction in `PillionApplication`. Hilt costs more than
+- No dependency-injection framework. Manual construction in `EyesUpApplication`. Hilt costs more than
   it returns on a 30-hour clock.
 - No Room, no SQLite. See ADR-006.
 - No network layer of any kind. There is nothing to configure and nothing to fail.

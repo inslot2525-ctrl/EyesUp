@@ -38,7 +38,7 @@ announced at the venue — confirm these in the first 15 minutes and correct thi
 
 ## 2. The Red Light iteration loop — build this first, it is what makes Red Light productive
 
-The reason the app reads its config from `/sdcard/Pillion/config/*.json` (ADR-007) is this loop:
+The reason the app reads its config from `/sdcard/EyesUp/config/*.json` (ADR-007) is this loop:
 
 ```
    edit JSON in a phone text editor  →  tap "Reload config" in the app
@@ -63,7 +63,7 @@ Light is dead time.
 Two people, two tracks, in parallel.
 
 **Track A — device qualification (do this once, properly, now):**
-- [ ] Notification access granted to Pillion; listener banner shows green
+- [ ] Notification access granted to EyesUp; listener banner shows green
 - [ ] Battery optimisation OFF, autostart ON, recents card locked (Funtouch kills listeners — see
       `DEVICE_AND_TOOLING_SETUP.md` §4). **Do not touch HackTracker's battery settings.**
 - [ ] TTS voice data present for `en-IN`, `hi-IN`, `mr-IN` — listen to each

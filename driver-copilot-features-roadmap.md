@@ -1,4 +1,4 @@
-# Pillion (Driver Copilot) — Feature List, Winning Plan & Build Order
+# EyesUp (Driver Copilot) — Feature List, Winning Plan & Build Order
 
 **iQOO City Battles, Pune · Sat 5 – Sun 6 September 2026**
 Companion to `driver-copilot-iqoo-pune-gameplan.md`. That file is *strategy and schedule*; this file
@@ -13,7 +13,7 @@ Every feature below traces to a rubric line. **25% of the score (Creative Phone 
 every module is chosen partly because it genuinely exercises a different capability of the phone, not
 because it sounds good on a slide.
 
-**The winning angle in one sentence:** Pillion is not a notification reader — it is a hands-free
+**The winning angle in one sentence:** EyesUp is not a notification reader — it is a hands-free
 arbitrator that compares every live gig offer across every app the driver runs, normalised for the
 unpaid distance platforms hide, and speaks one answer in the driver's own language, entirely
 on-device.
@@ -27,7 +27,7 @@ on-device.
 | # | Feature | Why it's Tier 0 | Acceptance criterion |
 |---|---|---|---|
 | T0.1 | **`:gigsim` companion app** posting real OS notifications for 5 gig apps | We have no driver accounts. This is the only input source, and it makes the demo repeatable | Pressing a button in `:gigsim` produces a system notification with the correct title/text/bigText |
-| T0.2 | **Notification capture** via `NotificationListenerService`, allow-listed by package | The foundation everything sits on | Every `:gigsim` post appears in Pillion's raw-event list within 500 ms |
+| T0.2 | **Notification capture** via `NotificationListenerService`, allow-listed by package | The foundation everything sits on | Every `:gigsim` post appears in EyesUp's raw-event list within 500 ms |
 | T0.3 | **Tier A regex extraction**, driven by `assets/config/parsers.json` | Fast, deterministic, safe on stage; config-driven so it is tunable from the phone | ≥ 90% field extraction on the corpus in `docs/NOTIFICATION_CORPUS.md` |
 | T0.4 | **Net-earnings scoring v1** — effective distance `tripKm + pickupKm`, minus personalised fuel cost, expressed as **₹/hour** and a 0-100 Smart Score | The domain insight, upgraded: drivers care about what they *keep*, not the headline payout. ₹/hour is the correct comparator because time is the scarce resource | A `Verdict` with a Smart Score, a net-₹ figure, a ₹/hour figure and at least one reason code, for every parsed offer |
 | T0.5 | **Templated TTS verdict**, English first, then Hindi + Marathi. **Lead the spoken line with ₹/hour**, not ₹/km | The whole product is "it talks so you don't look". "₹393 an hour versus ₹236" lands harder than any per-km figure | Verdict is spoken within 1.5 s of the notification landing |
@@ -90,7 +90,7 @@ on-device.
 - Support for more than the 5 seeded apps.
 - A settings screen beyond: language picker, daily earnings goal, reload-config button.
 - Automating the accept tap in the gig app itself. It would break platform terms and it is the one
-  thing that turns a defensible assistant into an indefensible bot. **Pillion advises; the driver acts.**
+  thing that turns a defensible assistant into an indefensible bot. **EyesUp advises; the driver acts.**
 
 ---
 
@@ -134,7 +134,7 @@ are behind at Sun 04:00, cut from the bottom of the list, never from the middle.
 The format's biggest avoidable loss is idling during the phone-only stretch. These are all
 genuinely phone-first tasks — nobody should ever be waiting for Green Light.
 
-1. **Tune `parsers.json` on the phone.** Open `/sdcard/Pillion/config/parsers.json` in a text editor,
+1. **Tune `parsers.json` on the phone.** Open `/sdcard/EyesUp/config/parsers.json` in a text editor,
    change a regex, hit *Reload config* in the app, fire the matching `:gigsim` payload, see whether
    it parses. Full iteration loop, no laptop, no rebuild. This is the highest-value Red Light work
    in the whole plan.

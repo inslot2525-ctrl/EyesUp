@@ -18,7 +18,7 @@
 | **Event clock** | **Hacking begins 11:00.** Now in the 11:00-14:00 GREEN window - the longest laptop block before Eval 1 (19:00). |
 | **Current phase** | Pre-event / Hour-0 prep |
 | **Build state** | **No code exists yet.** Planning and specification only. |
-| **Last commit** | `1003921` — spec: Pillion plan, build spec and two-agent relay infrastructure |
+| **Last commit** | `1003921` — spec: EyesUp plan, build spec and two-agent relay infrastructure |
 | **Latest PROGRESS entry** | `E-002` |
 | **Next task** | See `PROGRESS.md` -> E-002 -> NEXT INSTRUCTION. Scaffold Gradle, write `model/` first, then `:gigsim`. |
 
@@ -37,7 +37,7 @@
 ### Blockers
 | ID | Blocker | Owner | Unblocks when |
 |---|---|---|---|
-| B1 | Git initialised locally and committed, but **no remote is set**, so the relay has no transport | Human | A private GitHub repo exists, `git remote add origin` + `git push -u origin main` is done, and the teammate has cloned it |
+| ~~B1~~ | ~~No git remote~~ **CLEARED** - remote is `https://github.com/NotArnav03/EyesUp.git`, pushed to `main`. Remaining: teammate must clone it and confirm push access | Human | Teammate has cloned and pushed once |
 | B2 | Loaner device not in hand | Human | Check-in, Sat 08:00 |
 | B3 | Neither model file staged | Human | 1B (~550 MB) and 3-4B (~2.5 GB) downloaded and pushed to the phone during the 11:00-14:00 green window (ADR-012) |
 
@@ -97,7 +97,7 @@ feature beats a finished feature the next agent cannot find or trust.
 
 ## Section 3 — Thirty-second product brief (stable)
 
-**Pillion** is an Android app for gig drivers. It reads incoming order notifications from Uber, Rapido,
+**EyesUp** is an Android app for gig drivers. It reads incoming order notifications from Uber, Rapido,
 Swiggy, Zomato and Porter at the OS level, extracts payout / trip distance / pickup distance / ETA
 using a three-tier on-device NLU cascade, scores each offer against the driver's own history, their
 daily earnings goal and the drop zone's return prospects, **compares it against every other offer
@@ -137,12 +137,12 @@ it exercises the real notification pipeline, and it makes the demo repeatable.
 |---|---|
 | Primary working dir | `C:\Projects\iqoo` |
 | Platform | Windows 11, PowerShell + Git Bash both available |
-| Git remote | *(not set — see B1)*  ·  local branch: `main`, 1 commit |
+| Git remote | `https://github.com/NotArnav03/EyesUp.git` (origin/main) |
 | Loaner device model | *(fill in at check-in)* |
 | Android version / OS skin | *(fill in — expect Funtouch OS)* |
 | Device serial for `adb -s` | *(fill in)* |
 | Android Studio version | *(fill in)* |
 | JDK version | *(fill in — 17 expected)* |
 | Gemma model path (laptop) | *(fill in)* |
-| Gemma model path (device) | `/sdcard/Android/data/com.pillion.app/files/llm/model.task` — app-private external dir, readable by the app on every target API level. Do **not** use `/data/local/tmp/`; it is not readable by a normal app on all ROMs. |
-| Config dir on device | `/sdcard/Pillion/config/` — falls back to `/sdcard/Android/data/com.pillion.app/files/config/` if scoped storage blocks it (`scripts/push-config.sh` detects this and tells you) |
+| Gemma model path (device) | `/sdcard/Android/data/com.eyesup.app/files/llm/model.task` — app-private external dir, readable by the app on every target API level. Do **not** use `/data/local/tmp/`; it is not readable by a normal app on all ROMs. |
+| Config dir on device | `/sdcard/EyesUp/config/` — falls back to `/sdcard/Android/data/com.eyesup.app/files/config/` if scoped storage blocks it (`scripts/push-config.sh` detects this and tells you) |

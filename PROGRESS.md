@@ -61,7 +61,7 @@ actually exercised, and for roughly how long.
 **Bad:** "Continue working on the parser."
 
 **Good:**
-> 1. Add `RapidoParser` to `app/src/main/java/com/pillion/copilot/parse/regex/`. It must handle the
+> 1. Add `RapidoParser` to `app/src/main/java/com/eyesup/copilot/parse/regex/`. It must handle the
 >    three Rapido payload shapes in `docs/NOTIFICATION_CORPUS.md` §2.3, including the one with no
 >    pickup distance. Register it in `ParserRegistry.kt` keyed on package `com.rapido.rider`.
 >    Read patterns from `parsers.json` — do not hardcode regexes in Kotlin.
@@ -108,11 +108,11 @@ assumptions in the original plan that would have cost hours on the day.
 - Added three cheap, high-leverage scoring features: **deadhead-aware rate** (count the unpaid
   distance to pickup — the thing platforms hide), **earnings-goal urgency**, and **drop-zone return
   prospects** from a static Pune zone × hour table. ADR-005.
-- Added **hot-reloadable JSON config on the device** (`/sdcard/Pillion/config/`) so parser regexes,
+- Added **hot-reloadable JSON config on the device** (`/sdcard/EyesUp/config/`) so parser regexes,
   scoring weights and TTS templates can be tuned during Red Light from a phone text editor with no
   rebuild. This is the highest-value Red Light unlock in the plan. ADR-007.
-- Proposed renaming the product to **Pillion** (सारथी, the charioteer) — Marathi/Hindi-native for a
-  Pune jury. Code identifier fixed at `com.pillion.app` so the name cannot churn mid-build.
+- Proposed renaming the product to **EyesUp** (सारथी, the charioteer) — Marathi/Hindi-native for a
+  Pune jury. Code identifier fixed at `com.eyesup.app` so the name cannot churn mid-build.
 - Wrote the full specification set so a cold agent needs to guess nothing: architecture, concrete
   build spec with fixed class names and schemas, notification corpus, demo script and judge Q&A,
   fallback decision tree, device setup runbook, and the ADR log.
@@ -178,9 +178,9 @@ build order without asking a single clarifying question.
 > 1. Create a **private GitHub repo** and wire this directory to it:
 >    ```
 >    cd C:/Projects/iqoo
->    git init && git add -A && git commit -m "spec: Pillion plan, build spec and relay infrastructure"
+>    git init && git add -A && git commit -m "spec: EyesUp plan, build spec and relay infrastructure"
 >    git branch -M main
->    git remote add origin git@github.com:<user>/pillion-iqoo.git
+>    git remote add origin git@github.com:<user>/EyesUp.git
 >    git push -u origin main
 >    ```
 >    Give the teammate push access and have them clone it. **Unblocks B1.**
@@ -194,7 +194,7 @@ build order without asking a single clarifying question.
 > **For the next agent, once B1 is cleared — start the build:**
 > 1. Read `docs/BUILD_SPEC.md` end to end. It fixes every name you will need. Do not invent any.
 > 2. Scaffold the Gradle project exactly as specified in `docs/BUILD_SPEC.md` §2: root project
->    `pillion`, two modules `:app` (`com.pillion.app`) and `:gigsim` (`com.pillion.gigsim`),
+>    `eyesup`, two modules `:app` (`com.eyesup.app`) and `:gigsim` (`com.eyesup.gigsim`),
 >    Kotlin + Compose, minSdk 26, targetSdk 35.
 >    **Done when** `./gradlew :app:assembleDebug :gigsim:assembleDebug` succeeds and both APKs install.
 > 3. Build **step 1 of the build order only**: `:gigsim` posting real OS notifications. Spec is in
@@ -233,7 +233,7 @@ build order without asking a single clarifying question.
   8. **"The highest on-device builds will be preferred for the Top 10."** OpenRouter credits are for coding assistance only; no network call ships in the product (ADR-015).
 - Acted on the organiser's tip (30-hour phone surveillance, use the phone as much as possible): added gameplan §4a **Phone-first posture in both phases**. The previous plan left the phone idle for 12 of 30 hours during Green Light — a real forfeit. New default: phone in hand always, laptop driven through Office Kit, direct laptop use only for Gradle/dependency work. Three phones, three jobs. Overnight soak loop that doubles as the R2 listener-survival test.
 - Reviewed the teammate's 25-point feature list in full — verdict per item in `docs/FEATURE_REVIEW.md`. Adopted: net earnings + personal fuel model, ₹/hour as the spoken headline, Zero-Look Mode, Shift Strategist, voice loop promoted to Tier 1, priority preference, home direction, the Smart Score presentation, and the pitch reframe. Swapped camera OCR ingestion in for the fatigue check. Rejected: accessibility-service scraping (a positioning call, not a time call), demand prediction trained on simulated data, traffic routing, gamification.
-- Renamed the project **Sarthi → Pillion** across all 19 files (ADR-008 updated). One word, every Indian gig driver knows it, names the product's role exactly, sounds nothing like an AI product. Package fixed at `com.pillion.app`. Free to do now because no code exists.
+- Renamed the project **Sarthi → EyesUp** across all 19 files (ADR-008 updated). One word, every Indian gig driver knows it, names the product's role exactly, sounds nothing like an AI product. Package fixed at `com.eyesup.app`. Free to do now because no code exists.
 - Made the relay handoff protocol **self-perpetuating**: `CLAUDE.md` R0 and `HANDOFF.md` §2 now require every session to hand off the way it was handed to, and every `➡️ NEXT INSTRUCTION` must end with the handoff reminder verbatim so the protocol cannot decay down the chain.
 
 **Files touched.**
@@ -244,7 +244,7 @@ build order without asking a single clarifying question.
 - `docs/DECISIONS.md` — ADR-011 through ADR-018. ADR-018 supersedes ADR-010.
 - `docs/DEMO_AND_PITCH.md` — pitch opener reframed to "move the decision from the screen to the voice layer"; ₹/hour leads the domain-insight line.
 - `CLAUDE.md`, `HANDOFF.md` — handoff protocol made self-perpetuating.
-- All 19 files — Sarthi → Pillion rename.
+- All 19 files — Sarthi → EyesUp rename.
 
 **Commands run.**
 ```
@@ -277,7 +277,7 @@ grep -c "^## ADR-" docs/DECISIONS.md    # → 19
 >
 > **Next agent — build, in this order. We are in the 11:00–14:00 GREEN window, the longest laptop block before Eval 1. Use it for what only a laptop can do.**
 > 1. Read `docs/BUILD_SPEC.md` end to end. Every package, class and JSON key is fixed there. Invent nothing; if you need a new name, add it to BUILD_SPEC in the same commit.
-> 2. Scaffold per BUILD_SPEC §2: root project `pillion`, modules `:app` (`com.pillion.app`) and `:gigsim` (`com.pillion.gigsim`), Kotlin + Compose, minSdk 26, targetSdk 35. **Done when** `./gradlew :app:assembleDebug :gigsim:assembleDebug` succeeds and both APKs install.
+> 2. Scaffold per BUILD_SPEC §2: root project `eyesup`, modules `:app` (`com.eyesup.app`) and `:gigsim` (`com.eyesup.gigsim`), Kotlin + Compose, minSdk 26, targetSdk 35. **Done when** `./gradlew :app:assembleDebug :gigsim:assembleDebug` succeeds and both APKs install.
 > 3. Write the `model/` package **first and alone**, then commit and push it before touching anything else. It is the one shared surface between the two work tracks (`ARCHITECTURE.md` §5) and a conflict there is the most expensive merge in this project.
 > 4. Build **step 1 of the build order only**: `:gigsim` posting real OS notifications. Spec in BUILD_SPEC §8, payloads from `NOTIFICATION_CORPUS.md`. **Done when** a button in `:gigsim` produces a system notification whose title, text and bigText match the corpus entry exactly, seen in the shade on the real phone.
 > 5. **Push both model files to the phone in this window** — it is the last long laptop block before they are needed (`scripts/push-model.sh`).

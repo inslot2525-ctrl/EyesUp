@@ -1,4 +1,6 @@
-# Pillion — iQOO City Battles Pune 2026
+# EyesUp - iQOO Hackathon 2026, Pune City Battle
+
+> *Eyes up.* The decision moves off the screen and into the voice layer.
 
 On-device Android copilot for gig drivers. Reads incoming order notifications at the OS level,
 extracts payout / distance / pickup distance with a three-tier on-device NLU cascade, scores each

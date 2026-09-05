@@ -1,4 +1,4 @@
-# Pillion (Driver Copilot) — iQOO City Battles Pune 2026 · Game Plan
+# EyesUp (Driver Copilot) — iQOO City Battles Pune 2026 · Game Plan
 
 **Event:** iQOO City Battles, Pune Weekend — **Sat 5 – Sun 6 September 2026**, 30-hour phone-first build
 **Status of this document:** rewritten 2026-09-05, event day. This is no longer a pre-event plan; it is
@@ -8,10 +8,10 @@ an operating manual for the next 30 hours.
 **Track:** Smart Living (primary) / Open Innovation (fallback) — **confirm the exact PS text on the
 dashboard within the first 30 minutes and record it in `PROGRESS.md`.**
 
-> **Naming:** the product is **Pillion** — the person who rides behind you. Every gig driver in India
+> **Naming:** the product is **EyesUp** — the person who rides behind you. Every gig driver in India
 > knows the word, it is one syllable-pair, it names the product's role exactly (the one riding along,
 > watching, telling you what to do), and it sounds nothing like an AI product. Package identifier is
-> fixed at `com.pillion.app` (ADR-008). Runners-up: *Sarthi*, *Dhruv*.
+> fixed at `com.eyesup.app` (ADR-008). Runners-up: *Sarthi*, *Dhruv*.
 
 > **Device (handbook p.01):** iQOO 15 — Snapdragon 8 Elite Gen 5, dedicated Q3 chip, 16 GB LPDDR5X,
 > 14,000 mm² vapour chamber, 7,000 mAh. **One flagship loaner per person**, HackTracker pre-installed,
@@ -31,7 +31,7 @@ red light. No human can hold three live offers from three apps in their head, no
 the unpaid distance to the pickup, weigh them against how far they still are from today's earnings
 target, and decide before the timers run out.
 
-**Pillion does that, out loud, in the driver's language, without them touching the phone.** It listens
+**EyesUp does that, out loud, in the driver's language, without them touching the phone.** It listens
 to incoming notifications at the OS level, extracts the numbers with an on-device NLU stack, scores
 each offer against the driver's own accept/reject history, arbitrates between every offer currently
 live across all their apps, and speaks a single verdict: *"Take the Rapido one — ₹142 for 9 km, and
@@ -53,7 +53,7 @@ This section exists so nobody re-argues settled points. Full reasoning lives in 
 | 4 | **NLU is now a three-tier on-device cascade**: regex → **ML Kit Entity Extraction** → MediaPipe Gemma3-1B-int4. | ML Kit Entity Extraction is a genuine offline on-device model, a few MB, near-zero risk, and pulls money/date-time entities out of arbitrary text. It gives us a real "on-device AI" claim even if the LLM never loads. Gemma becomes the impressive top tier instead of a single point of failure. |
 | 5 | **Deadhead distance is counted in the rate.** | `payout ÷ (tripKm + pickupKm)` not `payout ÷ tripKm`. This is the domain insight that makes the scoring defensible and is the thing platforms do not show drivers. |
 | 6 | **Earnings-goal awareness and drop-zone return prospects added to scoring.** | Cheap to build (a running total, a clock, a static Pune zone table) and turns a static ₹/km rule into something that sounds like it understands the job. |
-| 7 | **Runtime config is hot-reloadable JSON on the device.** | Parser regexes, scoring weights and TTS templates load from `/sdcard/Pillion/config/`. Means real tuning work is possible during **Red Light from a phone text editor with no rebuild**. This is the single most valuable Red Light unlock in the plan. |
+| 7 | **Runtime config is hot-reloadable JSON on the device.** | Parser regexes, scoring weights and TTS templates load from `/sdcard/EyesUp/config/`. Means real tuning work is possible during **Red Light from a phone text editor with no rebuild**. This is the single most valuable Red Light unlock in the plan. |
 | 8 | **Room dropped in favour of JSON files + DataStore.** | KSP/Room schema churn is a bad bet on a 30-hour clock. |
 | 9 | **Camera fatigue check kept, but as a between-orders single shot** and explicitly framed for a driver-facing mount. | Continuous monitoring is not finishable and the mount caveat gets asked. Say it before a judge does. |
 | 10 | **Pre-event checklist converted into an Hour-0 checklist.** | The original said "you have roughly a day and a half." It is now event day. |
@@ -169,7 +169,7 @@ IDE refactors — and go straight back to the phone afterwards.
    banks nothing (risk R15).
 2. **Rotate so someone is always on a phone**, even while another person is on the laptop. With one
    flagship per person there is no reason for any phone to be face-down on the table.
-3. **Three phones, three jobs:** Phone A = Pillion (demo device), Phone B = GigSim (payload firing),
+3. **Three phones, three jobs:** Phone A = EyesUp (demo device), Phone B = GigSim (payload firing),
    Phone C = ops — PROGRESS entries, docs, git and log reading via Office Kit remote control.
 4. **Every payload fired is an inference call logged.** Tuning and telemetry are the same activity, so
    fire payloads liberally while tuning rather than reasoning about the regex in your head.
@@ -199,7 +199,7 @@ product genuinely lives on the device.
             │  Android OS notification bus             │
             └────────────────────┬─────────────────────┘
                                  ▼
-       [1] CAPTURE   PillionNotificationListener  → NotificationEvent
+       [1] CAPTURE   EyesUpNotificationListener  → NotificationEvent
                                  ▼
        [2] PARSE     Tier A  regex (config-driven, instant, deterministic)
                      Tier B  ML Kit Entity Extraction (on-device, offline)
@@ -298,7 +298,7 @@ Agenda times are from the handbook (page 06). Phase column from page 04. **Confi
 - [ ] The Reskill submission URL and the hard cutoff time
 
 **Devices (one flagship iQOO 15 per person):**
-- [ ] Nominate **Phone A = demo device (Pillion)**, **Phone B = GigSim**, **Phone C = ops** (docs,
+- [ ] Nominate **Phone A = demo device (EyesUp)**, **Phone B = GigSim**, **Phone C = ops** (docs,
       PROGRESS entries, git via Office Kit). Label them physically
 - [ ] Developer options -> USB debugging on every phone; `adb devices` shows them; record serials
 - [ ] **Stay awake while charging** ON for all phones - an idle phone banks nothing (R15)

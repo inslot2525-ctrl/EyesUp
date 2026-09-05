@@ -29,7 +29,7 @@ Flat, concrete, no adjectives. Do not say "revolutionary".
 > each actually *nets* after the unpaid ride to the pickup and the fuel, and decide before the timers
 > run out.
 >
-> Pillion does that. It reads the notifications at the OS level, pulls the numbers out with three
+> EyesUp does that. It reads the notifications at the OS level, pulls the numbers out with three
 > tiers of on-device AI, works out what each order really pays per hour after costs, ranks them
 > against each other, and says one sentence out loud. No cloud, no account, no backend. Nothing
 > leaves the device."
@@ -52,7 +52,7 @@ Hand the phone to a judge. Run the STORM sequence (§2).
 - [ ] Phone at >60% battery, brightness at max, Do Not Disturb **off**, volume at max
 - [ ] Bluetooth speaker paired and tested, or rely on the phone's speaker if the room is quiet
 - [ ] `:gigsim` open on the *second* phone, STORM button visible
-- [ ] Pillion open on the demo phone, listener status banner **green**
+- [ ] EyesUp open on the demo phone, listener status banner **green**
 - [ ] `CLEAR ALL` pressed in `:gigsim` so the shade is empty
 - [ ] Language set to whatever you will demo first
 - [ ] Backup video ready in the gallery, one tap away
@@ -63,7 +63,7 @@ Hand the phone to a judge. Run the STORM sequence (§2).
 |---|---|---|---|
 | 1 | Hand the phone to a judge | They are holding it. This matters — it is *their* experience, not a slide | — |
 | 2 | Say: "This is off the internet. Airplane mode, if you like." Let them toggle it | Establishes the on-device claim before you make it | Nothing to fail |
-| 3 | Press **STORM** on the second phone | 3 notifications land in 6 s; Pillion speaks the arbitration verdict naming the winner and the runner-up | Fall to §4 |
+| 3 | Press **STORM** on the second phone | 3 notifications land in 6 s; EyesUp speaks the arbitration verdict naming the winner and the runner-up | Fall to §4 |
 | 4 | Ask them to say **"why"** to the phone | It explains its reasoning aloud | Tap the "Why" button instead — same output, no excuse needed |
 | 5 | Tap **Reject** on the offer it recommended | The threshold bar visibly moves | Skip; do not draw attention |
 | 6 | Switch language to Marathi, press STORM again | Same verdict, in Marathi | Switch to Hindi |
@@ -84,7 +84,7 @@ These are worth score and none of them is obvious from watching:
 3. **"These are simulated notifications, because we can't get driver accounts — but they go through
    the real Android notification pipeline, exactly like the real apps would."** Say it *before*
    anyone asks. Disclosed is credible; discovered is fatal.
-4. **"Pillion advises. It never taps accept for you."** Pre-empts the "isn't this a bot" objection.
+4. **"EyesUp advises. It never taps accept for you."** Pre-empts the "isn't this a bot" objection.
 
 ---
 
@@ -126,7 +126,7 @@ question, in front of the same jury, and takes your technical-depth score with i
 > The driver grants Android's notification-access permission explicitly, in system settings, for
 > their own device and their own notifications. It is the same OS API smartwatches and car
 > head-units use. Nothing is transmitted, nothing is stored off-device, and we never automate an
-> action inside another app — Pillion advises, the driver taps. It is an accessibility-assistant
+> action inside another app — EyesUp advises, the driver taps. It is an accessibility-assistant
 > pattern, not scraping.
 
 **"Why wouldn't Uber just build this?"**

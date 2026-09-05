@@ -12,7 +12,7 @@ if [ ! -f "$MODEL" ]; then echo "!! model not found: $MODEL"; exit 1; fi
 
 # App-private external dir is readable by the app on every API level we target.
 # /data/local/tmp/ is NOT readable by a normal app on all ROMs - do not use it.
-DEST="/sdcard/Android/data/com.pillion.app/files/llm"
+DEST="/sdcard/Android/data/com.eyesup.app/files/llm"
 
 echo "==> size: $(du -h "$MODEL" | cut -f1). This takes about a minute over USB."
 adb $DEVICE_ARG shell "mkdir -p $DEST"
